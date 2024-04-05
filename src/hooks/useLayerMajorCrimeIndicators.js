@@ -3,11 +3,12 @@ import useLeftSideFilter from '../zustand/useLeftSideFilter';
 
 const useLayerMajorCrimeIndicators = () => {
 
-    const { selectedYear, selectedMonth, selectedDay } = useLeftSideFilter();
+    const { selectedYear, selectedMonth, selectedDay, selectedCategory } = useLeftSideFilter();
 
     let definitionExpression = `OCC_YEAR='${selectedYear}'`;
-    selectedMonth !== '' ? definitionExpression += `AND OCC_MONTH = '${selectedMonth}'` : '';
-    selectedDay !== '' ? definitionExpression += `AND OCC_DAY = '${selectedDay}'` : '';
+    selectedMonth !== '' ? definitionExpression += ` AND OCC_MONTH = '${selectedMonth}'` : '';
+    selectedDay !== '' ? definitionExpression += ` AND OCC_DAY = '${selectedDay}'` : '';
+    selectedCategory !== '' ? definitionExpression += ` AND MCI_CATEGORY = '${selectedCategory}'` : '';
 
     const layerMajorCrimeIndicators = new FeatureLayer({
         url: "https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Major_Crime_Indicators_Open_Data/FeatureServer/0",
