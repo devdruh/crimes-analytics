@@ -28,12 +28,10 @@ const LeftSideFilter = () => {
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
 
     return (
-        <div className="flex justify-center">
-            <div className="w-1/3">
-                <SelectYearList options={years} onChange={handleChangeYear} defaultValue={years[0].value} />
-                <SelectMonthList options={months} onChange={handleChangeMonth} />
-                <SelectDayList options={days} onChange={handleChangeDay} />
-            </div>
+        <div className="flex gap-2 px-2 pb-5">
+            <SelectYearList options={years} onChange={handleChangeYear} defaultValue={years[0].value} />
+            <SelectMonthList options={months} onChange={handleChangeMonth} />
+            <SelectDayList options={days} onChange={handleChangeDay} />
         </div>
     )
 }

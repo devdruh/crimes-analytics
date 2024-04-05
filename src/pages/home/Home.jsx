@@ -3,11 +3,11 @@ import LeftSidebar from "../../components/sidebar/LeftSidebar"
 
 const Home = () => {
   return (
-    <div className="flex w-full gap-2">
-      <div className="basis-1/6 max-sm:basis-full">
+    <div className="flex max-sm:flex-col gap-2">
+      <div className="w-1/5 max-sm:w-full">
         <LeftSidebar />
       </div>
-      <div className="basis-10/12 max-sm:basis-full">
+      <div className="w-4/5 max-sm:w-full">
         <MapContainer />
       </div>
     </div>
