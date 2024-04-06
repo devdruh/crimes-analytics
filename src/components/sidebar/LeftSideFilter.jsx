@@ -52,15 +52,36 @@ const LeftSideFilter = () => {
     return (
         <>
             <div className="flex flex-col justify-between 2xl:flex-row max-sm:flex-row gap-2 pb-5">
-                <div>
-                    <SelectYearList options={years} onChange={handleChangeYear} defaultValue={years[0].value} />
-                </div>
-                <div>
-                    <SelectMonthList options={months} onChange={handleChangeMonth} />
-                </div>
-                <div>
-                    <SelectDayList options={days} onChange={handleChangeDay} />
-                </div>
+                {
+                    loading && (
+                        <>
+                            <div className="pt-3 w-full">
+                                <SkeletonSelectInputList />
+                            </div>
+                            <div className="pt-3 w-full">
+                                <SkeletonSelectInputList />
+                            </div>
+                            <div className="pt-3 w-full">
+                                <SkeletonSelectInputList />
+                            </div>
+                        </>
+                    )
+                }
+                {
+                    !loading && (
+                        <>
+                            <div>
+                                <SelectYearList options={years} onChange={handleChangeYear} defaultValue={years[0].value} />
+                            </div>
+                            <div>
+                                <SelectMonthList options={months} onChange={handleChangeMonth} />
+                            </div>
+                            <div>
+                                <SelectDayList options={days} onChange={handleChangeDay} />
+                            </div>
+                        </>
+                    )
+                }
             </div>
             <div className="flex gap-2 justify-between">
                 <div className="w-full">
