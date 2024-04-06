@@ -8,6 +8,7 @@ import getLastFiveYearsArray from "../../utils/getFiveYearArray";
 import SelectInputList from "./SelectInputList";
 import useGetMCICategoryUniqueValues from "../../hooks/useGetMCICategoryUniqueValues";
 import { useEffect, useState } from "react";
+import SkeletonSelectInputList from "../../skeleton/SkeletonSelectInputList";
 
 const LeftSideFilter = () => {
 
@@ -66,6 +67,13 @@ const LeftSideFilter = () => {
                     {
                         !loading && categoryOption?.length > 0 && (
                             <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
+                        )
+                    }
+                    {
+                        loading && (
+                            <div className="pt-3">
+                                <SkeletonSelectInputList />
+                            </div>
                         )
                     }
                 </div>

@@ -14,7 +14,7 @@ const useGetMCICategoryUniqueValues = () => {
         const getMCIUniqueValues = async () => {
             setLoading(true);
             try {
-                uniqueValues({ layer: layerMajorCrimeIndicators, field: 'MCI_CATEGORY' })
+                await uniqueValues({ layer: layerMajorCrimeIndicators, field: 'MCI_CATEGORY' })
                     .then(response => {
                         // if (response.error) throw new Error(response.error);
                         setUniqueMCICategory(response?.uniqueValueInfos);
