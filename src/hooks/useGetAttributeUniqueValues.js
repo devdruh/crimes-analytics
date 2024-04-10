@@ -1,5 +1,5 @@
-import uniqueValues from '@arcgis/core/smartMapping/statistics/uniqueValues';
 import { useEffect, useState } from 'react';
+import uniqueValues from '@arcgis/core/smartMapping/statistics/uniqueValues';
 import useLeftSideFilter from '../zustand/useLeftSideFilter';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import toast from 'react-hot-toast';

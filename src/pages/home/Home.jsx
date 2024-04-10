@@ -1,5 +1,6 @@
 import MapContainer from "../../components/map/MapContainer"
 import LeftSidebar from "../../components/sidebar/LeftSidebar"
+import StatsContainer from "../../components/stats/StatsContainer"
 
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
         <LeftSidebar />
       </div>
       <div className="w-4/5 md:only:w-3/4 max-sm:w-full">
+        <StatsContainer />
         <MapContainer />
       </div>
     </div>

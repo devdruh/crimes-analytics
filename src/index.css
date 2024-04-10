@@ -10,7 +10,7 @@
 }
 
 .map-container {
-  height: calc(100vh - 69px);
+  height: calc(100vh - 177px);
 }
 
 @media screen and (max-width: 768px){
