@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import getMonthsArray from "../../utils/getMonthsArray";
 import useLeftSideFilter from "../../zustand/useLeftSideFilter";
 import SelectYearList from "./SelectYearList";
@@ -6,15 +7,21 @@ import getDaysArray from "../../utils/getDaysArray";
 import SelectDayList from "./SelectDayList";
 import getLastFiveYearsArray from "../../utils/getFiveYearArray";
 import SelectInputList from "./SelectInputList";
-import useGetMCICategoryUniqueValues from "../../hooks/useGetMCICategoryUniqueValues";
-import { useEffect, useState } from "react";
 import SkeletonSelectInputList from "../../skeleton/SkeletonSelectInputList";
 
-const LeftSideFilter = () => {
+// eslint-disable-next-line react/prop-types
+const LeftSideFilter = ({ categoryOption }) => {
 
-    const [categoryOption, setCategoryOption] = useState([]);
-    const { setSelectedYear, setSelectedMonth, setSelectedDay, setSelectedCategory, selectedYear, selectedMonth } = useLeftSideFilter();
-    const { uniqueMCICategory, loading } = useGetMCICategoryUniqueValues();
+    const [isLoading, setIsLoading] = useState(true);
+
+    const {
+        setSelectedYear,
+        setSelectedMonth,
+        setSelectedDay,
+        setSelectedCategory,
+        selectedYear,
+        selectedMonth,
+    } = useLeftSideFilter();
 
     const handleChangeYear = (value) => {
         setSelectedYear(value);
@@ -37,23 +44,22 @@ const LeftSideFilter = () => {
     const findMonthValue = months.find(month => month.label === selectedMonth);
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
 
-
     useEffect(() => {
-        var categoryArray = [];
-        for (let i = 0; i < uniqueMCICategory?.length; i++) {
-            categoryArray.push({
-                label: uniqueMCICategory[i].value,
-                value: uniqueMCICategory[i].value
-            })
-        }
-        setCategoryOption(categoryArray);
-    }, [uniqueMCICategory]);
+
+        const timeoutId = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timeoutId);
+
+    }, [setIsLoading]);
 
     return (
         <>
             <div className="flex flex-col justify-between 2xl:flex-row max-sm:flex-row gap-2 pb-5">
+
                 {
-                    loading && (
+                    isLoading && (
                         <>
                             <div className="pt-3 w-full">
                                 <SkeletonSelectInputList />
@@ -68,7 +74,7 @@ const LeftSideFilter = () => {
                     )
                 }
                 {
-                    !loading && (
+                    !isLoading && (
                         <>
                             <div>
                                 <SelectYearList options={years} onChange={handleChangeYear} defaultValue={years[0].value} />
@@ -86,12 +92,12 @@ const LeftSideFilter = () => {
             <div className="flex gap-2 justify-between">
                 <div className="w-full">
                     {
-                        !loading && categoryOption?.length > 0 && (
+                        !isLoading && categoryOption && (
                             <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
                         )
                     }
                     {
-                        loading && (
+                        isLoading && (
                             <div className="pt-3">
                                 <SkeletonSelectInputList />
                             </div>
