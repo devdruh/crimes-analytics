@@ -21,6 +21,9 @@ const useGetAttributeUniqueValues = (field, url) => {
 
     useEffect(() => {
 
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         const layer = new FeatureLayer({
             url: url,
             outFields: "*",
@@ -30,9 +33,10 @@ const useGetAttributeUniqueValues = (field, url) => {
 
             try {
                 setLoading(true);
-                const response = await uniqueValues({ layer: layer, field: field, sqlWhere: sqlQuery })
+                const response = await uniqueValues({ layer: layer, field: field, sqlWhere: sqlQuery, signal: signal })
 
                 if (response.error) {
+                    // console.log("Error: " + response.error);
                     throw new Error(result.error)
                 }
 
@@ -51,9 +55,13 @@ const useGetAttributeUniqueValues = (field, url) => {
                 }
 
                 if (result.length === 0) {
+
                     toast.success('No available data.', {
+                        id: 'no-available-data',
                         position: "bottom-right"
                     });
+                    controller.abort();
+
                 }
 
             } catch (error) {
@@ -64,6 +72,7 @@ const useGetAttributeUniqueValues = (field, url) => {
                 setLoading(false);
             }
 
+            return () => controller.abort()
         }
 
         findValues();
