@@ -29,12 +29,12 @@ const StatsPanel = ({ data, featureCount }) => {
                             selectedCategory !== '' && item.value === selectedCategory ? (
                                 <>
                                     <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{featureCount}</div>
-                                    <div className="stat-desc">...% more than last month</div>
+                                    <div className="stat-desc truncate"><p className='truncate'>...% more than last month</p></div>
                                 </>
                             ) : (
                                 <>
                                         <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{item.count}</div>
-                                    <div className="stat-desc">{item.count === 0 ? 'No available data' : '...% more than last month'}</div>
+                                        <div className="stat-desc truncate">{item.count === 0 ? 'No available data' : <p className='truncate'>...% more than last month</p>}</div>
                                 </>
                             )
                         }
