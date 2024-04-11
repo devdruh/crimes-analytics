@@ -8,9 +8,11 @@ import SelectDayList from "./SelectDayList";
 import getLastFiveYearsArray from "../../utils/getFiveYearArray";
 import SelectInputList from "./SelectInputList";
 import SkeletonSelectInputList from "../../skeleton/SkeletonSelectInputList";
+import getLayerUrl from "../../utils/getLayerUrl";
+import useGetAttributeUniqueValues from "../../hooks/useGetAttributeUniqueValues";
 
 // eslint-disable-next-line react/prop-types
-const LeftSideFilter = ({ categoryOption }) => {
+const LeftSideFilter = () => {
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -44,7 +46,15 @@ const LeftSideFilter = ({ categoryOption }) => {
     const findMonthValue = months.find(month => month.label === selectedMonth);
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
 
+    const { mci } = getLayerUrl();
+    const { attributeValues } = useGetAttributeUniqueValues('MCI_CATEGORY', mci);
+    const [categoryOption, setCategoryOption] = useState([]);
+
     useEffect(() => {
+
+        if (attributeValues.length > 0) {
+            setCategoryOption(attributeValues)
+        }
 
         const timeoutId = setTimeout(() => {
             setIsLoading(false);
@@ -52,7 +62,7 @@ const LeftSideFilter = ({ categoryOption }) => {
 
         return () => clearTimeout(timeoutId);
 
-    }, [setIsLoading]);
+    }, [setIsLoading, attributeValues]);
 
     return (
         <>
@@ -92,7 +102,7 @@ const LeftSideFilter = ({ categoryOption }) => {
             <div className="flex gap-2 justify-between">
                 <div className="w-full">
                     {
-                        !isLoading && categoryOption && (
+                        !isLoading && categoryOption && categoryOption.length > 0 && (
                             <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
                         )
                     }
