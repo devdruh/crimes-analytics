@@ -1,10 +1,18 @@
 import getRandomStatsIcon from '../../utils/getRandomStatsIcon'
+import getToastNotification from '../../utils/getToastNotification';
 import useLeftSideFilter from '../../zustand/useLeftSideFilter';
+import { useEffect } from 'react';
 
 // eslint-disable-next-line react/prop-types
 const StatsPanel = ({ data, featureCount }) => {
 
     const { selectedCategory } = useLeftSideFilter();
+
+    useEffect(() => {
+        if (selectedCategory !== '' && featureCount === 0) {
+            getToastNotification().noAvailableData;
+        }
+    }, [selectedCategory, featureCount]);
 
     return (
         <>
@@ -12,7 +20,7 @@ const StatsPanel = ({ data, featureCount }) => {
                 // eslint-disable-next-line react/prop-types
                 data && data.map((item, i) => (
 
-                    <div className="stat" key={i}>
+                    <div className="stat w-auto" key={i}>
                         <div className="stat-figure text-primary">
                             {getRandomStatsIcon()}
                         </div>
@@ -37,7 +45,7 @@ const StatsPanel = ({ data, featureCount }) => {
                 ))
             }
 
-            <div className="stat">
+            <div className="stat w-auto">
                 <div className="stat-figure text-secondary">
                     <div className="avatar">
                         <div className="w-16 rounded-full">

@@ -30,7 +30,7 @@ const StatsContainer = () => {
 
     return (
         <>
-            <div className="stats shadow grid auto-rows-auto auto-cols-auto">
+            <div className="shadow max-[1800px]:grid max-md:grid-cols-2 max-2xl:grid-cols-3 max-[1800px]:grid-cols-3 min-[1800px]:stats min-[1800px]:flex min-[1800px]:justify-between">
 
                 {
                     data.length !== 0 && data.length > 0 && (<StatsPanel data={data} featureCount={featureCount} />)

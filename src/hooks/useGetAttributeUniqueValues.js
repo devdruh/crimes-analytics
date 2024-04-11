@@ -3,6 +3,7 @@ import uniqueValues from '@arcgis/core/smartMapping/statistics/uniqueValues';
 import useLeftSideFilter from '../zustand/useLeftSideFilter';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import toast from 'react-hot-toast';
+import getToastNotification from '../utils/getToastNotification';
 
 const useGetAttributeUniqueValues = (field, url) => {
 
@@ -67,10 +68,7 @@ const useGetAttributeUniqueValues = (field, url) => {
                 if (result.length === 0) {
 
                     setAttributeValues([]);
-                    toast.success('No available data.', {
-                        id: 'no-available-data',
-                        position: "bottom-right"
-                    });
+                    getToastNotification().noAvailableData;
                     controller.abort();
 
                 }
