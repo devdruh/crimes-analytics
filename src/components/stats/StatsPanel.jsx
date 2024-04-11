@@ -20,7 +20,7 @@ const StatsPanel = ({ data, featureCount }) => {
                 // eslint-disable-next-line react/prop-types
                 data && data.map((item, i) => (
 
-                    <div className="stat w-auto" key={i}>
+                    <div className="stat" key={i}>
                         <div className="stat-figure text-primary">
                             {getRandomStatsIcon()}
                         </div>
@@ -45,7 +45,7 @@ const StatsPanel = ({ data, featureCount }) => {
                 ))
             }
 
-            <div className="stat w-auto">
+            <div className="stat">
                 <div className="stat-figure text-secondary">
                     <div className="avatar">
                         <div className="w-16 max-sm:w-12 rounded-full">
