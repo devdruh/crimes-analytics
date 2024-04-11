@@ -8,6 +8,7 @@ const useGetAttributeUniqueValues = (field, url) => {
 
     const [attributeValues, setAttributeValues] = useState([]);
     const [loading, setLoading] = useState(false)
+    const [prevAttributeValues, setPrevAttributeValues] = useState([]);
 
     const {
         selectedYear,
@@ -40,22 +41,32 @@ const useGetAttributeUniqueValues = (field, url) => {
                     throw new Error(result.error)
                 }
 
-                const result = response.uniqueValueInfos;
-                if (result) {
-                    var formatted = [];
+                const result = response?.uniqueValueInfos;
+                if (result.length > 0) {
+                    var valueFormatted = [];
+                    var noValueFormatted = [];
+
                     for (let index = 0; index < result.length; index++) {
                         const element = result[index];
-                        formatted.push({
+                        valueFormatted.push({
                             label: element.value,
                             value: element.value,
                             count: element.count
+                        });
+                        noValueFormatted.push({
+                            label: element.value,
+                            value: element.value,
+                            count: 0
                         })
+
                     }
-                    setAttributeValues(formatted);
+                    setAttributeValues(valueFormatted);
+                    setPrevAttributeValues(noValueFormatted)
                 }
 
                 if (result.length === 0) {
 
+                    setAttributeValues([]);
                     toast.success('No available data.', {
                         id: 'no-available-data',
                         position: "bottom-right"
@@ -72,14 +83,14 @@ const useGetAttributeUniqueValues = (field, url) => {
                 setLoading(false);
             }
 
-            return () => controller.abort()
+            return () => controller.abort() && setAttributeValues([])
         }
 
         findValues();
 
     }, [sqlQuery, field, url]);
 
-    return { attributeValues, loading }
+    return { attributeValues, prevAttributeValues, loading }
 }
 
 export default useGetAttributeUniqueValues
