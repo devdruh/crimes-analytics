@@ -18,12 +18,13 @@ const LeftSidebar = () => {
     return (
         <>
             <p className="font-semibold text-center pt-3">Filters</p>
-            <div className="divider" />
+            <div className="divider mt-0 mb-0" />
             <div className="px-2">
                 {
                     isLoading ? <LoadingSpinner /> : <LeftSideFilters />
                 }
             </div>
+            <div className="divider mt-7" />
         </>
     )
 }

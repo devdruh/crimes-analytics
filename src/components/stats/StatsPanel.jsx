@@ -28,12 +28,12 @@ const StatsPanel = ({ data, featureCount }) => {
                         {
                             selectedCategory !== '' && item.value === selectedCategory ? (
                                 <>
-                                    <div className="stat-value text-primary">{featureCount}</div>
+                                    <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{featureCount}</div>
                                     <div className="stat-desc">...% more than last month</div>
                                 </>
                             ) : (
                                 <>
-                                    <div className="stat-value text-primary">{item.count}</div>
+                                        <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{item.count}</div>
                                     <div className="stat-desc">{item.count === 0 ? 'No available data' : '...% more than last month'}</div>
                                 </>
                             )
@@ -48,7 +48,7 @@ const StatsPanel = ({ data, featureCount }) => {
             <div className="stat w-auto">
                 <div className="stat-figure text-secondary">
                     <div className="avatar">
-                        <div className="w-16 rounded-full">
+                        <div className="w-16 max-sm:w-12 rounded-full">
                             <svg
                                 viewBox="0 0 512 512"
                                 fill="currentColor"
@@ -58,7 +58,7 @@ const StatsPanel = ({ data, featureCount }) => {
                         </div>
                     </div>
                 </div>
-                <div className="stat-value">{featureCount}</div>
+                <div className="stat-value max-sm:font-medium max-md:text-xl">{featureCount}</div>
                 <div className="stat-title">Total</div>
                 <div className="stat-desc text-secondary">Face Neutral</div>
             </div>
