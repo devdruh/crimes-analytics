@@ -5,7 +5,7 @@ import useLeftSideFilter from '../zustand/useLeftSideFilter';
 import { useShallow } from 'zustand/react/shallow'
 import formatCategoryQuery from '../utils/formatCategoryQuery';
 
-const useLayerMemo = () => {
+const useLayerInit = () => {
 
     const { layerMajorCrimeIndicators } = useLayerMajorCrimeIndicators();
 
@@ -42,4 +42,4 @@ const useLayerMemo = () => {
     return () => { layerMajorCrimeIndicators }
 }
 
-export default useLayerMemo
+export default useLayerInit

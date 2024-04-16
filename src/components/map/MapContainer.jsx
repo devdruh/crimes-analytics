@@ -1,34 +1,20 @@
 import { useEffect, useRef } from "react";
-import MapView from "@arcgis/core/views/MapView.js";
-import map from "./Map";
-import useLayerMemo from "../../hooks/useLayerMemo";
-// import useLayerMajorCrimeIndicators from "../../hooks/useLayerMajorCrimeIndicators";
+import useLayerInit from "../../hooks/useLayerInit";
+import view from "./View";
 
 const MapContainer = () => {
 
-    // const { layerMajorCrimeIndicators } = useLayerMajorCrimeIndicators();
-
     const mapRef = useRef(null);
 
-    useLayerMemo();
-    // useMemo(() => {
-    //     map.layers.removeAll();
-    //     map.addMany([layerMajorCrimeIndicators])
-    // }, [layerMajorCrimeIndicators])
+    useLayerInit();
 
     useEffect(() => {
 
         if (mapRef?.current) {
 
-            const view = new MapView({
-                container: mapRef?.current,
-                map: map,
-                center: [-79.34600830076083, 43.755225053060066],
-                zoom: 10
-            });
+            view.set('container', mapRef?.current);
 
-            // return () => view && map.layers.removeAll();
-            return () => { view }
+            return () => mapRef.current = null && view;
         }
 
     }, []);
