@@ -10,24 +10,30 @@ import SkeletonStatsPanel from '../../skeleton/SkeletonStatsPanel';
 const StatsContainer = () => {
 
     const { mci } = getLayerUrl();
-    const { loading, attributeValues, prevAttributeValues } = useGetAttributeUniqueValues('MCI_CATEGORY', mci);
+    const { loading, attributeValues, zeroAttributeValues } = useGetAttributeUniqueValues('MCI_CATEGORY', mci);
     const { featureCount } = useGetMCIFeatureCount(mci)
-    const { selectedCategory } = useLeftSideFilter(useShallow((state) => ({ selectedCategory: state.selectedCategory })));
+    const { selectedCategories } = useLeftSideFilter(useShallow((state) => ({ selectedCategories: state.selectedCategories })));
     const [data, setData] = useState([]);
 
     useEffect(() => {
 
-        if (attributeValues.length > 0) {
-            if (selectedCategory !== '') {
-                setData(prevAttributeValues);
-            } else {
-                setData(attributeValues);
+        if (selectedCategories.length > 0) {
+            for (let index = 0; index < zeroAttributeValues.length; index++) {
+                const element = zeroAttributeValues[index];
+                const selectedCategory = selectedCategories.find(item => item.value === element.value);
+
+                if (selectedCategory !== undefined) {
+                    const findSelectedCategory = attributeValues.find(item => item.value === selectedCategory.value);
+                    zeroAttributeValues[index].count = findSelectedCategory.count;
+                }
+
             }
+            setData(zeroAttributeValues);
         } else {
-            setData(prevAttributeValues);
+            setData(attributeValues);
         }
 
-    }, [attributeValues, prevAttributeValues, selectedCategory]);
+    }, [attributeValues, zeroAttributeValues, selectedCategories]);
 
     return (
         <>

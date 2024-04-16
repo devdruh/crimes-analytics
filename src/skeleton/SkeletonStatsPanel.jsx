@@ -6,8 +6,8 @@ const SkeletonStatsPanel = ({ data }) => {
         <>
             {
                 // eslint-disable-next-line react/prop-types
-                data && data.map((i) => (
-                    <div className="stat" key={i}>
+                data && data.map((item) => (
+                    <div className="stat" key={item.value}>
                         <div className="stat-figure text-secondary">
                             <div className="avatar">
                                 <div className="skeleton w-16 h-16 max-sm:w-12 max-sm:h-12 rounded-full"></div>

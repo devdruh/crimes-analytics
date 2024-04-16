@@ -3,6 +3,7 @@ import useLayerMajorCrimeIndicators from './useLayerMajorCrimeIndicators';
 import map from '../components/map/Map';
 import useLeftSideFilter from '../zustand/useLeftSideFilter';
 import { useShallow } from 'zustand/react/shallow'
+import formatCategoryQuery from '../utils/formatCategoryQuery';
 
 const useLayerMemo = () => {
 
@@ -12,18 +13,22 @@ const useLayerMemo = () => {
         selectedYear,
         selectedMonth,
         selectedDay,
-        selectedCategory,
+        selectedCategories,
     } = useLeftSideFilter(useShallow((state) => ({
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
         selectedDay: state.selectedDay,
-        selectedCategory: state.selectedCategory,
+        selectedCategories: state.selectedCategories,
     })));
 
     let sqlQuery = `OCC_YEAR='${selectedYear}'`;
     selectedMonth !== '' ? sqlQuery += ` AND OCC_MONTH = '${selectedMonth}'` : '';
     selectedDay !== '' ? sqlQuery += ` AND OCC_DAY = '${selectedDay}'` : '';
-    selectedCategory !== '' ? sqlQuery += ` AND MCI_CATEGORY = '${selectedCategory}'` : '';
+
+    if (selectedCategories.length > 0) {
+        const formattedCategory = formatCategoryQuery(selectedCategories);
+        sqlQuery += formattedCategory;
+    }
 
     useEffect(() => {
 
@@ -31,7 +36,6 @@ const useLayerMemo = () => {
 
         map.layers.removeAll();
         map.layers.add(layerMajorCrimeIndicators);
-
 
     }, [layerMajorCrimeIndicators, sqlQuery])
 

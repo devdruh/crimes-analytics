@@ -9,12 +9,13 @@ const useGetAttributeUniqueValues = (field, url) => {
 
     const [attributeValues, setAttributeValues] = useState([]);
     const [loading, setLoading] = useState(false)
-    const [prevAttributeValues, setPrevAttributeValues] = useState([]);
+    const [zeroAttributeValues, setZeroAttributeValues] = useState([]);
 
     const {
         selectedYear,
         selectedMonth,
         selectedDay,
+        selectedCategories,
     } = useLeftSideFilter();
 
     let sqlQuery = `OCC_YEAR='${selectedYear}'`;
@@ -62,7 +63,7 @@ const useGetAttributeUniqueValues = (field, url) => {
 
                     }
                     setAttributeValues(valueFormatted);
-                    setPrevAttributeValues(noValueFormatted)
+                    setZeroAttributeValues(noValueFormatted)
                 }
 
                 if (result.length === 0) {
@@ -86,9 +87,9 @@ const useGetAttributeUniqueValues = (field, url) => {
 
         findValues();
 
-    }, [sqlQuery, field, url]);
+    }, [sqlQuery, field, url, selectedCategories]);
 
-    return { attributeValues, prevAttributeValues, loading }
+    return { attributeValues, zeroAttributeValues, loading }
 }
 
 export default useGetAttributeUniqueValues

@@ -1,18 +1,7 @@
 import getRandomStatsIcon from '../../utils/getRandomStatsIcon'
-import getToastNotification from '../../utils/getToastNotification';
-import useLeftSideFilter from '../../zustand/useLeftSideFilter';
-import { useEffect } from 'react';
 
 // eslint-disable-next-line react/prop-types
 const StatsPanel = ({ data, featureCount }) => {
-
-    const { selectedCategory } = useLeftSideFilter();
-
-    useEffect(() => {
-        if (selectedCategory !== '' && featureCount === 0) {
-            getToastNotification().noAvailableData;
-        }
-    }, [selectedCategory, featureCount]);
 
     return (
         <>
@@ -20,25 +9,13 @@ const StatsPanel = ({ data, featureCount }) => {
                 // eslint-disable-next-line react/prop-types
                 data && data.map((item, i) => (
 
-                    <div className="stat" key={i}>
+                    <div className="stat" key={i + 1}>
                         <div className="stat-figure text-primary">
                             {getRandomStatsIcon()}
                         </div>
                         <div className="stat-title">{item.value}</div>
-                        {
-                            selectedCategory !== '' && item.value === selectedCategory ? (
-                                <>
-                                    <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{featureCount}</div>
-                                    <div className="stat-desc truncate"><p className='truncate'>...% more than last month</p></div>
-                                </>
-                            ) : (
-                                <>
-                                        <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{item.count}</div>
-                                        <div className="stat-desc truncate">{item.count === 0 ? 'No available data' : <p className='truncate'>...% more than last month</p>}</div>
-                                </>
-                            )
-                        }
-
+                        <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{item.count}</div>
+                        <div className="stat-desc truncate">{item.count === 0 ? 'No available data' : <p className='truncate'>...% more than last month</p>}</div>
                         {/* <div className="stat-value text-primary">{selectedCategory !== '' && item.value === selectedCategory ? featureCount : item.count}</div> */}
                         {/* <div className="stat-desc">{item.count === 0 ? 'No available data' : '...% more than last month'}</div> */}
                     </div>

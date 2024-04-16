@@ -20,9 +20,9 @@ const LeftSideFilter = () => {
         setSelectedYear,
         setSelectedMonth,
         setSelectedDay,
-        setSelectedCategory,
         selectedYear,
         selectedMonth,
+        setSelectedCategories,
     } = useLeftSideFilter();
 
     const handleChangeYear = (value) => {
@@ -38,7 +38,7 @@ const LeftSideFilter = () => {
     };
 
     const handleChangeCategory = (value) => {
-        setSelectedCategory(value);
+        setSelectedCategories(value);
     }
 
     const years = getLastFiveYearsArray();

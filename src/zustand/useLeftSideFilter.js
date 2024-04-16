@@ -7,8 +7,8 @@ const useLeftSideFilter = create((set) => ({
     setSelectedMonth: (selectedMonth) => set({ selectedMonth }),
     selectedDay: '',
     setSelectedDay: (selectedDay) => set({ selectedDay }),
-    selectedCategory: '',
-    setSelectedCategory: (selectedCategory) => set({ selectedCategory }),
+    selectedCategories: [],
+    setSelectedCategories: (selectedCategories) => set({ selectedCategories }),
 }))
 
 export default useLeftSideFilter;

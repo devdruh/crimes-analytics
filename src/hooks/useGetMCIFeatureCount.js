@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import useLeftSideFilter from '../zustand/useLeftSideFilter';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import formatCategoryQuery from '../utils/formatCategoryQuery';
 
 const useGetMCIFeatureCount = (url) => {
 
@@ -12,13 +13,17 @@ const useGetMCIFeatureCount = (url) => {
         selectedYear,
         selectedMonth,
         selectedDay,
-        selectedCategory,
+        selectedCategories,
     } = useLeftSideFilter();
 
     let sqlQuery = `OCC_YEAR='${selectedYear}'`;
     selectedMonth !== '' ? sqlQuery += ` AND OCC_MONTH = '${selectedMonth}'` : '';
     selectedDay !== '' ? sqlQuery += ` AND OCC_DAY = '${selectedDay}'` : '';
-    selectedCategory !== '' ? sqlQuery += ` AND MCI_CATEGORY = '${selectedCategory}'` : '';
+
+    if (selectedCategories.length > 0) {
+        const formattedCategory = formatCategoryQuery(selectedCategories);
+        sqlQuery += formattedCategory;
+    }
 
     useEffect(() => {
 
