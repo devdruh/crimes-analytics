@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import useThemeSelector from "../../zustand/useThemeSelector";
+import map from "../map/Map";
 
 const Navbar = () => {
 
@@ -10,14 +11,26 @@ const Navbar = () => {
         localStorage.setItem('isDark', JSON.stringify(isDark));
         document.documentElement.removeAttribute('data-theme');
 
+        const dark = document.querySelector("#arcgis-maps-sdk-theme-dark");
+        const light = document.querySelector("#arcgis-maps-sdk-theme-light");
+
         if (('isDark' in localStorage)) {
             if (localStorage.isDark === 'true' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 localStorage.setItem('isDark', JSON.stringify(true));
-                document.documentElement.setAttribute('data-theme', 'dark')
+                document.documentElement.setAttribute('data-theme', 'dark');
+                light.disabled = true;
+                dark.disabled = false;
+                map.basemap = dark.disabled ? "gray-vector" : "dark-gray-vector";
             } else if (localStorage.isDark === 'true' && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark')
+                document.documentElement.setAttribute('data-theme', 'dark');
+                light.disabled = true;
+                dark.disabled = false;
+                map.basemap = dark.disabled ? "gray-vector" : "dark-gray-vector";
             } else {
-                document.documentElement.setAttribute('data-theme', 'light')
+                document.documentElement.setAttribute('data-theme', 'light');
+                light.disabled = false;
+                dark.disabled = true;
+                map.basemap = dark.disabled ? "gray-vector" : "dark-gray-vector";
             }
         }
 
