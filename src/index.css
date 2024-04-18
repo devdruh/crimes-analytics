@@ -6,16 +6,85 @@
 @tailwind utilities;
 
 #viewDiv {
-  @apply h-full w-full
+    @apply h-full w-full
+}
+
+.map-loading {
+    @apply flex justify-end right-2 absolute top-1/2 
 }
 
 .map-container {
-  height: calc(100vh - 177px);
+    height: calc(100vh - 249px);
+}
+
+#sliderContainer {
+    flex: 0 0 80px;
+    order: 2;
+}
+
+#sliderValue {
+    flex: 0 0 100px;
+    order: 1;
+}
+
+#sliderInnerContainer {
+    flex: 1 1 auto;
+    order: 2;
+}
+
+/**
+* Play/Stop toggle button
+*/
+
+#playButton {
+    flex: 0 0 100px;
+    order: 3;
+}
+
+.toggle-button {
+    display: flex;
+}
+
+.toggle-button.toggled .toggle-button-icon {
+    color: #cc1b1b;
+}
+
+.toggle-button .toggle-button-icon {
+    color: #1bcc1b;
+}
+
+.toggle-button > :nth-child(2) {
+    display: none;
+}
+
+.toggle-button.toggled > :nth-child(1) {
+    display: none;
+}
+
+.toggle-button.toggled > :nth-child(2) {
+    display: block;
+}
+/**
+* Hover tooltip
+*/
+
+.tooltip {
+    position: absolute;
+    pointer-events: none;
+    transition: opacity 200ms;
+}
+
+.tooltip > div {
+    margin: 0 auto;
+    padding: 12px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 4px rgba(255, 255, 255, 0.75);
+    transform: translate3d(-50%, -125%, 0);
 }
 
 @media screen and (max-width: 768px){
-  .map-container {
-    height: calc(100vh - 150px);
-  }
+    .map-container {
+        height: calc(100vh - 150px);
+    }
 }
 

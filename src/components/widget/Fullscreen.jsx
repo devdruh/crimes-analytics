@@ -14,13 +14,14 @@ const handleFullscreen = reactiveUtils.watch(
 
         if (state === 'ready') {
             mapContainer.setAttribute('class', 'map-container');
+            view.set('zoom', 10);
         } else if (state === 'active') {
             mapContainer.setAttribute('class', 'h-screen w-screen');
+            view.set('zoom', 11);
         }
     },
 );
 
 fullscreen.addHandles(handleFullscreen);
-view.ui.add(fullscreen, "top-right");
 
 export default fullscreen
