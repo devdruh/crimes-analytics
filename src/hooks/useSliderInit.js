@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react'
-import { useShallow } from 'zustand/react/shallow';
+import { useEffect, useRef } from 'react';
 import * as promiseUtils from "@arcgis/core/core/promiseUtils.js";
 import createSliderWidget from '../zustand/createSliderWidget';
 import createLeftSideFilter from '../zustand/createLeftSideFilter';
@@ -13,12 +12,7 @@ import view from '../components/map/View';
 const useSliderInit = () => {
 
     const { setSliderValue } = createSliderWidget();
-    const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter(useShallow((state) => ({
-        selectedYear: state.selectedYear,
-        selectedMonth: state.selectedMonth,
-        selectedDay: state.selectedDay,
-    })));
-
+    const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter();
     let layerSymbol = useRef(null);
 
     useEffect(() => {

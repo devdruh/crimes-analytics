@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import createLeftSideFilter from "../../zustand/createLeftSideFilter";
 import createSliderWidget from "../../zustand/createSliderWidget";
@@ -16,10 +16,13 @@ const PlayPause = () => {
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [playValue, setPlayValue] = useState(0);
+    let layerSymbol = useRef(null);
 
     useEffect(() => {
 
         let timeoutId;
+        const initLayerRenderer = layerMajorCrimeIndicators.renderer; 
+
         const updateSliderValue = (value) => {
             slider.viewModel.setValue(0, value);
 
@@ -44,6 +47,18 @@ const PlayPause = () => {
                     setPlayValue(slider.min);
                 }
             }, 1000);
+        }
+
+        // Set to default renderer while playing
+        if (selectedMonth === '') {
+            setIsPlaying(false);
+            if (layerMajorCrimeIndicators.renderer?.visualVariables?.length > 0) {
+                layerMajorCrimeIndicators.renderer = layerSymbol.current;
+            }
+        } else {
+            if (initLayerRenderer?.visualVariables === null) {
+                layerSymbol.current = initLayerRenderer;
+            }
         }
 
         return () => {

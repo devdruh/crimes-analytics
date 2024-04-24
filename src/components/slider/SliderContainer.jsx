@@ -25,10 +25,10 @@ const SliderContainer = ({ sliderRef }) => {
     }
 
     return (
-        <div className={`${selectedMonth !== '' ? 'visible ease-in duration-300 transition -translate-y-3/4' : 'invisible absolute'}`}>
-            <div id="sliderContainer" className="esri-widget flex flex-row px-3 translate-y-3/4" >
+        <div className={`${selectedMonth !== '' ? 'visible ease-in duration-700 transition -translate-y-3/4' : 'invisible absolute'}`}>
+            <div id="sliderContainer" className="esri-widget flex flex-row translate-y-3/4" >
                 <span id="sliderValue" className="text-nowrap flex justify-center flex-col text-center text-xl">{sliderValue}</span>
-                <div id="sliderInnerContainer" className="flex flex-col justify-center px-5">
+                <div id="sliderInnerContainer" className="flex flex-col justify-center">
                     <div id="slider" ref={sliderRef} className="w-full"></div>
                 </div>
                 <label id="playButton" className="swap esri-widget my-3">
