@@ -13,6 +13,7 @@ const Navbar = () => {
 
         const dark = document.querySelector("#arcgis-maps-sdk-theme-dark");
         const light = document.querySelector("#arcgis-maps-sdk-theme-light");
+        const widgets = document.getElementsByClassName("esri-ui");
 
         if (('isDark' in localStorage)) {
             if (localStorage.isDark === 'true' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -31,6 +32,10 @@ const Navbar = () => {
                 light.disabled = false;
                 dark.disabled = true;
                 map.basemap = dark.disabled ? "gray-vector" : "dark-gray-vector";
+            }
+
+            for (let i = 0; i < widgets.length; i++) {
+                widgets.item(i).classList.toggle("calcite-mode-dark");
             }
         }
 

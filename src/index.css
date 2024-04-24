@@ -11,6 +11,10 @@
 }
 
 .map-container {
+    height: calc(100vh - 177px);
+}
+
+.map-container-slider {
     height: calc(100vh - 249px);
 }
 
@@ -81,6 +85,10 @@
 
 @media screen and (max-width: 768px){
     .map-container {
+        height: calc(100vh - 150px);
+    }
+
+    .map-container-slider {
         height: calc(100vh - 150px);
     }
 }

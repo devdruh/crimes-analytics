@@ -1,20 +1,18 @@
 import { useEffect } from 'react'
-import useLayerMajorCrimeIndicators from './useLayerMajorCrimeIndicators';
 import map from '../components/map/Map';
-import useLeftSideFilter from '../zustand/useLeftSideFilter';
+import createLeftSideFilter from '../zustand/createLeftSideFilter';
 import { useShallow } from 'zustand/react/shallow'
 import formatCategoryQuery from '../utils/formatCategoryQuery';
+import { layerMajorCrimeIndicators } from '../utils/layers';
 
 const useLayerInit = () => {
-
-    const { layerMajorCrimeIndicators } = useLayerMajorCrimeIndicators();
 
     const {
         selectedYear,
         selectedMonth,
         selectedDay,
         selectedCategories,
-    } = useLeftSideFilter(useShallow((state) => ({
+    } = createLeftSideFilter(useShallow((state) => ({
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
         selectedDay: state.selectedDay,
@@ -37,9 +35,9 @@ const useLayerInit = () => {
         map.layers.removeAll();
         map.layers.add(layerMajorCrimeIndicators);
 
-    }, [layerMajorCrimeIndicators, sqlQuery])
+    }, [sqlQuery])
 
-    return () => { layerMajorCrimeIndicators }
+    // return () => { layerMajorCrimeIndicators }
 }
 
 export default useLayerInit

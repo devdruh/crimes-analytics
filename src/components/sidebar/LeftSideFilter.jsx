@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import getMonthsArray from "../../utils/getMonthsArray";
-import useLeftSideFilter from "../../zustand/useLeftSideFilter";
+import createLeftSideFilter from "../../zustand/createLeftSideFilter";
 import SelectYearList from "./SelectYearList";
 import SelectMonthList from "./SelectMonthList";
 import getDaysArray from "../../utils/getDaysArray";
@@ -8,8 +8,9 @@ import SelectDayList from "./SelectDayList";
 import getLastFiveYearsArray from "../../utils/getFiveYearArray";
 import SelectInputList from "./SelectInputList";
 import SkeletonSelectInputList from "../../skeleton/SkeletonSelectInputList";
-import getLayerUrl from "../../utils/getLayerUrl";
 import useGetAttributeUniqueValues from "../../hooks/useGetAttributeUniqueValues";
+import { useShallow } from "zustand/react/shallow";
+import { API_MCI_ENDPOINT } from "../../utils/constants";
 
 // eslint-disable-next-line react/prop-types
 const LeftSideFilter = () => {
@@ -22,8 +23,17 @@ const LeftSideFilter = () => {
         setSelectedDay,
         selectedYear,
         selectedMonth,
+        selectedDay,
         setSelectedCategories,
-    } = useLeftSideFilter();
+    } = createLeftSideFilter(useShallow((state) => ({
+        setSelectedYear: state.setSelectedYear,
+        setSelectedMonth: state.setSelectedMonth,
+        setSelectedDay: state.setSelectedDay,
+        selectedYear: state.selectedYear,
+        selectedMonth: state.selectedMonth,
+        selectedDay: state.selectedDay,
+        setSelectedCategories: state.setSelectedCategories,
+    })));
 
     const handleChangeYear = (value) => {
         setSelectedYear(value);
@@ -31,6 +41,9 @@ const LeftSideFilter = () => {
 
     const handleChangeMonth = (value) => {
         setSelectedMonth(value);
+
+        if (value === '')
+            setSelectedDay('');
     };
 
     const handleChangeDay = (value) => {
@@ -46,8 +59,7 @@ const LeftSideFilter = () => {
     const findMonthValue = months.find(month => month.label === selectedMonth);
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
 
-    const { mci } = getLayerUrl();
-    const { attributeValues } = useGetAttributeUniqueValues('MCI_CATEGORY', mci);
+    const { attributeValues } = useGetAttributeUniqueValues('MCI_CATEGORY', API_MCI_ENDPOINT);
     const [categoryOption, setCategoryOption] = useState([]);
 
     useEffect(() => {
@@ -93,7 +105,7 @@ const LeftSideFilter = () => {
                                 <SelectMonthList options={months} onChange={handleChangeMonth} />
                             </div>
                             <div>
-                                <SelectDayList options={days} onChange={handleChangeDay} />
+                                <SelectDayList options={days} onChange={handleChangeDay} selected={selectedDay} />
                             </div>
                         </>
                     )

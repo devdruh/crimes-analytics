@@ -4,4 +4,4 @@ const map = new Map({
     basemap: "dark-gray-vector",
 });
 
-export default map
+export default map  

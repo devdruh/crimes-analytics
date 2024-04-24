@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
-const useSliderWidget = create((set) => ({
+const createSliderWidget = create((set) => ({
     sliderValue: '',
     setSliderValue: (sliderValue) => set({ sliderValue })
 }))
 
-export default useSliderWidget
+export default createSliderWidget

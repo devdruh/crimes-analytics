@@ -1,74 +1,171 @@
-import { useEffect } from 'react'
-import useSliderWidget from '../zustand/useSliderWidget';
-import slider from '../components/widget/Slider';
-import useLeftSideFilter from '../zustand/useLeftSideFilter';
+import { useEffect, useRef } from 'react'
+import { useShallow } from 'zustand/react/shallow';
+import * as promiseUtils from "@arcgis/core/core/promiseUtils.js";
+import createSliderWidget from '../zustand/createSliderWidget';
+import createLeftSideFilter from '../zustand/createLeftSideFilter';
+import { layerMajorCrimeIndicators, layerMCIRenderer } from '../utils/layers';
+import { formatHour12 } from '../utils/formatters';
 import getDaysArray from '../utils/getDaysArray';
 import getMonthsArray from '../utils/getMonthsArray';
-import { useShallow } from 'zustand/react/shallow';
+import slider from '../components/widget/Slider';
+import view from '../components/map/View';
 
 const useSliderInit = () => {
 
-    const { setSliderValue } = useSliderWidget();
-    const { selectedYear, selectedMonth, selectedDay } = useLeftSideFilter(useShallow((state) => ({
+    const { setSliderValue } = createSliderWidget();
+    const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter(useShallow((state) => ({
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
         selectedDay: state.selectedDay,
     })));
+
+    let layerSymbol = useRef(null);
 
     useEffect(() => {
 
         const today = new Date();
         const months = getMonthsArray();
 
-        const handleThumbDrag = (event) => {
+        const handleSliderValue = (value) => {
 
-            if (event.state === 'stop') {
-                const value = event.value;
+            slider.viewModel.setValue(0, value);
 
-                slider.viewModel.setValue(0, value);
-
-                if (selectedYear !== '') {
-                    const findMonthValue = months.find(month => month.value === value);
-                    setSliderValue(findMonthValue?.label);
-                }
-
-                if (selectedMonth !== '') {
-                    const findMonthValue = months.find(month => month.label === selectedMonth);
-                    const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value + 1));
-                    if (value > days.length) {
-                        slider.values = [Math.floor(value / 2)];
-                        setSliderValue('Day-' + Math.floor(value / 2));
-                    } else {
-                        slider.values = [value];
-                        setSliderValue('Day-' + value);
-                    }
-                }
-
-                if (selectedDay !== '') {
-                    const today = new Date();
-                    today.setHours(value, 0, 0, 0);
-                    const valueString = today.toLocaleString('en-US', { hour: 'numeric', hour12: true });
-                    setSliderValue(valueString);
-                }
+            if (selectedMonth !== '' && selectedDay === '') {
+                setSliderValue('Day-' + value);
             }
+
+            if (selectedDay !== '') {
+                const today = new Date();
+                today.setHours(value, 0, 0, 0);
+                setSliderValue(formatHour12(today));
+            }
+
+            layerMajorCrimeIndicators.renderer = layerMCIRenderer(value, selectedDay, selectedMonth);
 
         }
 
+        const handleThumbDrag = (event) => {
+            if (event.state === 'stop') {
+                const value = event.value;
+                handleSliderValue(value);
+            }
+        }
+
+        const setupHoverTooltip = (layerview) => {
+
+            let highlight;
+
+            const tooltip = createTooltip();
+
+            const hitTest = promiseUtils.debounce((event) => {
+                return view.hitTest(event)
+                    .then((hit) => {
+                        const results = hit.results.filter((result) => {
+                            return result.graphic.layer === layerMajorCrimeIndicators;
+                        });
+
+                        if (!results.length) {
+                            return null;
+                        }
+
+                        return {
+                            graphic: results[0].graphic,
+                            screenPoint: hit.screenPoint
+                        };
+                    });
+            });
+
+            view.on("pointer-move", (event) => {
+                return hitTest(event)
+                    .then((hit) => {
+                        // remove current highlighted feature
+                        if (highlight) {
+                            highlight.remove();
+                            highlight = null;
+                        }
+
+                        // highlight the hovered feature
+                        // or hide the tooltip
+                        if (hit) {
+                            const graphic = hit.graphic;
+                            const screenPoint = hit.screenPoint;
+
+                            highlight = layerview.highlight(graphic);
+
+                            const today = new Date();
+                            today.setHours(graphic.getAttribute("OCC_HOUR"), 0, 0, 0);
+
+                            tooltip.show(screenPoint, selectedMonth !== '' && selectedDay === '' ? "Occurred in day " + graphic.getAttribute("OCC_DAY") : "Occurred at " + formatHour12(today));
+                        } else {
+                            tooltip.hide();
+                        }
+                    }, () => { });
+            });
+        }
+
+        function createTooltip() {
+            const tooltip = document.createElement("div");
+            const style = tooltip.style;
+
+            tooltip.setAttribute("role", "tooltip");
+            tooltip.classList.add("tooltip");
+
+            const textElement = document.createElement("div");
+            textElement.classList.add("esri-widget");
+            textElement.classList.add("invisible");
+            tooltip.appendChild(textElement);
+
+            view.container.appendChild(tooltip);
+
+            let x = 0;
+            let y = 0;
+            let targetX = 0;
+            let targetY = 0;
+            let visible = false;
+
+            // move the tooltip progressively
+            function move() {
+                x += (targetX - x) * 0.1;
+                y += (targetY - y) * 0.1;
+
+                if (Math.abs(targetX - x) < 1 && Math.abs(targetY - y) < 1) {
+                    x = targetX;
+                    y = targetY;
+                } else {
+                    requestAnimationFrame(move);
+                }
+
+                style.transform = "translate3d(" + Math.round(x) + "px," + Math.round(y) + "px, 0)";
+            }
+
+            return {
+                show: (point, text) => {
+                    if (!visible) {
+                        x = point.x;
+                        y = point.y;
+                    }
+
+                    targetX = point.x;
+                    targetY = point.y;
+                    style.opacity = 1;
+                    visible = true;
+                    textElement.innerHTML = text;
+                    textElement.classList.remove("invisible");
+
+                    move();
+                },
+
+                hide: () => {
+                    style.opacity = 0;
+                    visible = false;
+                }
+            };
+        }
+
+
         const sliderInit = () => {
 
-            if (selectedYear !== '' && selectedMonth === '' && selectedDay === '') {
-                const value = today.getMonth() + 1;
-
-                slider.min = 1;
-                slider.max = 12;
-                slider.values = [value];
-                slider.steps = 1;
-
-                const findMonthValue = months.find(month => month.value === value);
-
-                setSliderValue(findMonthValue.label);
-
-            } else if (selectedYear !== '' && selectedMonth !== '' && selectedDay === '') {
+            if (selectedMonth !== '' && selectedDay === '') {
                 const value = today.getDate();
                 const findMonthValue = months.find(month => month.label === selectedMonth);
                 const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
@@ -78,36 +175,49 @@ const useSliderInit = () => {
                 slider.steps = 1;
 
                 if (value > days.length) {
-
                     slider.values = [Math.floor(value / 2)];
                     setSliderValue('Day-' + Math.floor(value / 2));
-
                 } else {
-
                     slider.values = [value];
                     setSliderValue('Day-' + value);
                 }
+            }
 
-            } else if (selectedYear !== '' && selectedMonth !== '' && selectedDay !== '') {
+            if (selectedDay !== '') {
                 const value = today.getHours();
-                const valueString = today.toLocaleString('en-US', { hour: 'numeric', hour12: true });
 
-                slider.min = 1;
-                slider.max = 24;
-                slider.values = [value];
-                setSliderValue(valueString);
+                slider.min = 0;
+                slider.max = 23;
+                slider.viewModel.setValue(0, value);
+                setSliderValue(formatHour12(today));
             }
 
             slider.on("thumb-drag", handleThumbDrag);
+            view.whenLayerView(layerMajorCrimeIndicators).then(setupHoverTooltip);
 
-            return () => { handleThumbDrag }
+            return () => { handleThumbDrag && layerMajorCrimeIndicators.renderer }
 
         }
 
-        sliderInit();
+        const initLayerRenderer = layerMajorCrimeIndicators.renderer;
+
+        if (selectedMonth !== '') {
+            sliderInit();
+
+            if (initLayerRenderer?.visualVariables === null) {
+                layerSymbol.current = initLayerRenderer
+            }
+        }
+
+        if (initLayerRenderer?.visualVariables?.length > 0) {
+            layerMajorCrimeIndicators.renderer = layerSymbol.current
+        }
+
+        return () => { handleThumbDrag && layerMajorCrimeIndicators.renderer }
 
     }, [setSliderValue, selectedYear, selectedMonth, selectedDay]);
 
+    // return { createRendererLayerMCI }
 }
 
 export default useSliderInit

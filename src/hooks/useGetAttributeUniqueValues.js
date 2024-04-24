@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import uniqueValues from '@arcgis/core/smartMapping/statistics/uniqueValues';
-import useLeftSideFilter from '../zustand/useLeftSideFilter';
+import createLeftSideFilter from '../zustand/createLeftSideFilter';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import toast from 'react-hot-toast';
 import getToastNotification from '../utils/getToastNotification';
+import { useShallow } from 'zustand/react/shallow';
 
 const useGetAttributeUniqueValues = (field, url) => {
 
     const [attributeValues, setAttributeValues] = useState([]);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [zeroAttributeValues, setZeroAttributeValues] = useState([]);
 
     const {
@@ -16,7 +17,12 @@ const useGetAttributeUniqueValues = (field, url) => {
         selectedMonth,
         selectedDay,
         selectedCategories,
-    } = useLeftSideFilter();
+    } = createLeftSideFilter(useShallow((state) => ({
+        selectedYear: state.selectedYear,
+        selectedMonth: state.selectedMonth,
+        selectedDay: state.selectedDay,
+        selectedCategories: state.selectedCategories,
+    })));
 
     let sqlQuery = `OCC_YEAR='${selectedYear}'`;
     selectedMonth !== '' ? sqlQuery += ` AND OCC_MONTH = '${selectedMonth}'` : '';
