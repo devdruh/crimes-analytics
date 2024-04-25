@@ -13,11 +13,12 @@ const StatsPanel = ({ data, featureCount }) => {
                         <div className="stat-figure text-primary">
                             {getRandomStatsIcon()}
                         </div>
-                        <div className="stat-title">{item.value}</div>
+                        <div className="stat-title text-base-content">{item.value}</div>
                         <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{item.count}</div>
                         <div className="stat-desc truncate">{item.count === 0 ? 'No available data' : <p className='truncate'>...% more than last month</p>}</div>
                         {/* <div className="stat-value text-primary">{selectedCategory !== '' && item.value === selectedCategory ? featureCount : item.count}</div> */}
                         {/* <div className="stat-desc">{item.count === 0 ? 'No available data' : '...% more than last month'}</div> */}
+                        {/* 100 - 40 = 60 , 60/40 = 1.5, 1.5 * 100 = 150% */}
                     </div>
                 ))
             }
@@ -35,8 +36,8 @@ const StatsPanel = ({ data, featureCount }) => {
                         </div>
                     </div>
                 </div>
-                <div className="stat-value max-sm:font-medium max-md:text-xl">{featureCount}</div>
-                <div className="stat-title">Total</div>
+                <div className="stat-value text-secondary max-sm:font-medium max-md:text-xl">{featureCount}</div>
+                <div className="stat-title text-base-content">Total</div>
                 <div className="stat-desc text-secondary">Face Neutral</div>
             </div>
         </>
