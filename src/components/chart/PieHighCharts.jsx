@@ -3,12 +3,15 @@ import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting'
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import { useEffect, useState } from 'react';
+import useThemeSelector from '../../zustand/useThemeSelector';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
 }
 // eslint-disable-next-line react/prop-types
 const PieHighCharts = ({ items }) => {
+
+    const { isDark } = useThemeSelector();
 
     const pieOptions = {
         accessibility: {
@@ -179,6 +182,9 @@ const PieHighCharts = ({ items }) => {
 
     useEffect(() => {
 
+        const colorGreen = ['#1c6e67', '#26938a', '#2fb8ac', '#59c6bd', '#82d4cd', '#ace3de', '#d5f1ee'];
+        const colorYellow = ['#664b07', '#99710a', '#cc960e', '#ffbc11', '#ffc941', '#ffd770', '#ffe4a0'];
+
         setOptions((data) => ({
             ...data,
             series: [
@@ -216,7 +222,31 @@ const PieHighCharts = ({ items }) => {
             }))
         }
 
-    }, [selectedYear, selectedMonth, selectedDay, items]);
+        if (isDark) {
+            setOptions((data) => ({
+                ...data,
+                plotOptions: {
+                    ...data.plotOptions,
+                    pie: {
+                        ...data.plotOptions.pie,
+                        colors: colorGreen,
+                    },
+                }
+            }));
+        } else {
+            setOptions((data) => ({
+                ...data,
+                plotOptions: {
+                    ...data.plotOptions,
+                    pie: {
+                        ...data.plotOptions.pie,
+                        colors: colorYellow,
+                    },
+                }
+            }));
+        }
+
+    }, [selectedYear, selectedMonth, selectedDay, items, isDark]);
 
     return (
         <HighchartsReact
