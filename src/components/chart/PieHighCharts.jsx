@@ -11,6 +11,9 @@ if (typeof Highcharts === 'object') {
 const PieHighCharts = ({ items }) => {
 
     const pieOptions = {
+        accessibility: {
+            enabled: false,
+        },
         chart: {
             type: 'pie',
             // width: 500,
