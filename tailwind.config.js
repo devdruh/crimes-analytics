@@ -10,7 +10,23 @@ export default {
     },
     darkMode: ['selector', '[data-mode="dark"]'],
     daisyui: {
-        themes: false,
+        // themes: false,
+        themes: [
+            {
+                light: {
+                    ...require("daisyui/src/theming/themes")["light"],
+                    "primary": "#0ca5b0",
+                    "secondary": "#2fb8ac",
+                },
+            },
+            {
+                dark: {
+                    ...require("daisyui/src/theming/themes")["dark"],
+                    'primary': "#0ca5b0",
+                    "secondary": "#2fb8ac",
+                }
+            }
+        ],
     },
     plugins: [
         require("daisyui")

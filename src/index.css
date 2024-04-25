@@ -11,11 +11,11 @@
 }
 
 .map-container {
-    height: calc(100vh - 177px);
+    height: calc(100vh - 178px);
 }
 
 .map-container-slider {
-    height: calc(100vh - 249px);
+    height: calc(100vh - 250px);
 }
 
 #sliderContainer {
@@ -83,13 +83,44 @@
     transform: translate3d(-50%, -125%, 0);
 }
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 640px){
     .map-container {
-        height: calc(100vh - 150px);
+        height: calc(100vh - 20vh);
     }
 
     .map-container-slider {
-        height: calc(100vh - 150px);
+        height: calc(100vh - 30vh);
     }
 }
 
+@media screen and (min-width: 640px) and (max-width: 768px){
+    .map-container {
+        height: calc(100vh - 368px);
+    }
+
+    .map-container-slider {
+        height: calc(100vh - 440px);
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1800px){
+    .map-container {
+        height: calc(100vh - 289px);
+    }
+
+    .map-container-slider {
+        height: calc(100vh - 363px);
+    }
+}
+
+.esri-widget {
+    @apply bg-base-100
+}
+
+.stats-panel {    
+    /* border-radius: var(--rounded-box, 1rem); */
+    --tw-bg-opacity: 1;
+    background-color: var(--fallback-b1, oklch(var(--b1) / var(--tw-bg-opacity)));
+    --tw-text-opacity: 1;
+    color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)))
+}

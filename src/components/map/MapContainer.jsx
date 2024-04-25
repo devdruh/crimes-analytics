@@ -6,14 +6,15 @@ import slider from "../widget/Slider";
 import expandLegend from "../widget/ExpandLegend";
 import SliderContainer from "../slider/SliderContainer";
 import useLayerInit from "../../hooks/useLayerInit";
-import createLeftSideFilter from "../../zustand/createLeftSideFilter";
+import expandChart from "../widget/ExpandChart";
+import Chart from "../widget/Chart";
 
 const MapContainer = () => {
 
     const mapRef = useRef(null);
     const appRef = useRef(null);
     const sliderRef = useRef(null);
-    const { selectedMonth } = createLeftSideFilter();
+    const chartRef = useRef('chart-ref');
 
     useLayerInit();
 
@@ -23,20 +24,24 @@ const MapContainer = () => {
 
             view.set('container', mapRef?.current);
             fullscreen.set('element', appRef?.current);
-            view.ui.add(fullscreen, "top-right");
+            view.ui.add(fullscreen, "top-left");
 
             slider.set('container', sliderRef?.current);
             view.ui.add(expandLegend, 'bottom-left');
 
+            expandChart.set('content', document.getElementById(chartRef.current));
+            view.ui.add(expandChart, "top-right");
+
             return () => { mapRef.current = null && view && fullscreen && appRef };
         }
 
-    }, [selectedMonth]);
+    }, []);
 
     return (
         <>
             <SliderContainer sliderRef={sliderRef} />
             <MapView appRef={appRef} mapRef={mapRef} />
+            <Chart id={chartRef.current} />
         </>
     )
 }

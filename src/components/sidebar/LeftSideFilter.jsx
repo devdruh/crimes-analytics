@@ -10,7 +10,7 @@ import SelectInputList from "./SelectInputList";
 import SkeletonSelectInputList from "../../skeleton/SkeletonSelectInputList";
 import useGetAttributeUniqueValues from "../../hooks/useGetAttributeUniqueValues";
 import { useShallow } from "zustand/react/shallow";
-import { API_MCI_ENDPOINT } from "../../utils/constants";
+import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from "../../utils/constants";
 
 // eslint-disable-next-line react/prop-types
 const LeftSideFilter = () => {
@@ -59,7 +59,7 @@ const LeftSideFilter = () => {
     const findMonthValue = months.find(month => month.label === selectedMonth);
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
 
-    const { attributeValues } = useGetAttributeUniqueValues('MCI_CATEGORY', API_MCI_ENDPOINT);
+    const { attributeValues } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
     const [categoryOption, setCategoryOption] = useState([]);
 
     useEffect(() => {
