@@ -1,9 +1,9 @@
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import HighchartsExporting from 'highcharts/modules/exporting'
+import HighchartsExporting from 'highcharts/modules/exporting';
+import useThemeSelector from '../../zustand/useThemeSelector';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import { useEffect, useState } from 'react';
-import useThemeSelector from '../../zustand/useThemeSelector';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
