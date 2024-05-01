@@ -3,9 +3,7 @@ import * as promiseUtils from "@arcgis/core/core/promiseUtils.js";
 import createSliderWidget from '../zustand/createSliderWidget';
 import createLeftSideFilter from '../zustand/createLeftSideFilter';
 import { layerMajorCrimeIndicators, layerMCIRenderer } from '../utils/layers';
-import { formatHour12 } from '../utils/formatters';
-import getDaysArray from '../utils/getDaysArray';
-import getMonthsArray from '../utils/getMonthsArray';
+import { formatHour12, getDaysArray, getMonthsArray } from '../utils/formatters';
 import slider from '../components/widget/Slider';
 import view from '../components/map/View';
 

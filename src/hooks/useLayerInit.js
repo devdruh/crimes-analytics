@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import map from '../components/map/Map';
 import createLeftSideFilter from '../zustand/createLeftSideFilter';
-import { useShallow } from 'zustand/react/shallow'
-import formatCategoryQuery from '../utils/formatCategoryQuery';
+import { useShallow } from 'zustand/react/shallow';
 import { layerMajorCrimeIndicators } from '../utils/layers';
+import { formatCategoryQuery } from '../utils/formatters';
 
 const useLayerInit = () => {
 

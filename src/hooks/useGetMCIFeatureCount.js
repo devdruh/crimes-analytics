@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import createLeftSideFilter from '../zustand/createLeftSideFilter';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import formatCategoryQuery from '../utils/formatCategoryQuery';
+import { formatCategoryQuery } from '../utils/formatters';
 
 const useGetMCIFeatureCount = (url) => {
 
