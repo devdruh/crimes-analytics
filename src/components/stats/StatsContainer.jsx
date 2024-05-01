@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import StatsPanel from './StatsPanel';
 import useGetMCIFeatureCount from '../../hooks/useGetMCIFeatureCount';
 import useGetAttributeUniqueValues from '../../hooks/useGetAttributeUniqueValues';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
-import { useShallow } from 'zustand/react/shallow'
 import SkeletonStatsPanel from '../../skeleton/SkeletonStatsPanel';
-import { API_MCI_ENDPOINT } from '../../utils/constants';
-import StatsPanel from './StatsPanel';
+import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from '../../utils/constants';
 
 const StatsContainer = () => {
 
-    const { loading, attributeValues, zeroAttributeValues } = useGetAttributeUniqueValues('MCI_CATEGORY', API_MCI_ENDPOINT);
+    const { loading, attributeValues, zeroAttributeValues } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
     const { featureCount } = useGetMCIFeatureCount(API_MCI_ENDPOINT)
     const { selectedCategories } = createLeftSideFilter(useShallow((state) => ({ selectedCategories: state.selectedCategories })));
     const [data, setData] = useState([]);
