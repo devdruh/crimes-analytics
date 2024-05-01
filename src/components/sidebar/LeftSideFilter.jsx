@@ -46,14 +46,11 @@ const LeftSideFilter = () => {
         if (value === '') { 
             setSelectedDay('');
             navigate(`/filter/${selectedYear}`, { state: { key: value } });
-            console.log('clear value');
         } else {
 
             if (selectedDay === '') {
-                console.log('if');
                 navigate(`/filter/${selectedYear}/${value}`, { state: { key: value } });
             } else {
-                console.log('else');
                 navigate(`/filter/${selectedYear}/${value}/${selectedDay}`, { state: { key: value } });
             }
         }
