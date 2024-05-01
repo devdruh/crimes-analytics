@@ -24,12 +24,13 @@ export const router = createBrowserRouter([
             {
                 path: 'test',
                 element: <TestPage />,
+                errorElement: <RootBoundary />,
             },
             {
                 path: 'filter',
                 // index: true,
                 element: <Home />,
-                // errorElement: <RootBoundary />,
+                errorElement: <RootBoundary />,
                 children: [
                     // {
                     //     path: 'filter',
