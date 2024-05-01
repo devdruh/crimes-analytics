@@ -22,11 +22,11 @@ export const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: '/test',
+                path: 'test',
                 element: <TestPage />,
             },
             {
-                path: '/filter',
+                path: 'filter',
                 // index: true,
                 element: <Home />,
                 // errorElement: <RootBoundary />,
