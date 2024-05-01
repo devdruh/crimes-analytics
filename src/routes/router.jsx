@@ -40,6 +40,11 @@ export const router = createBrowserRouter([
                                 element: null,
                                 loader: async ({ params }) => {
 
+                                    const isYearValid = years.includes(parseInt(params.year));
+                                    if (!isYearValid) {
+                                        throw json({ data: years, }, { status: 404, statusText: "Invalid year!" });
+                                    }
+
                                     const isMonthValid = months.some((i) => i.label === params.month);
                                     if (!isMonthValid) {
                                         throw json({ data: months, }, { status: 404, statusText: "Invalid month!" });

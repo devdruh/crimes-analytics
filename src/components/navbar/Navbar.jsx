@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { APP_NAME } from "../../utils/constants";
 import useThemeSelector from "../../zustand/useThemeSelector";
 import map from "../map/Map";
 
@@ -44,7 +45,7 @@ const Navbar = () => {
     return (
         <div className="navbar bg-base-100 border-b border-neutral-content">
             <div className="flex-1">
-                <a className="btn btn-link text-xl no-underline hover:no-underline text-opacity-90">Toronto Crimes Analytics</a>
+                <a className="btn btn-link text-xl no-underline hover:no-underline text-opacity-90">{APP_NAME}</a>
             </div>
             <div className="navbar-end">
                 <div className="mr-2">
