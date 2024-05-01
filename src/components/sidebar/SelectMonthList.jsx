@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
+// import { useState } from 'react'
 
-const SelectMonthList = ({ options, onChange }) => {
-    const [selectedValue, setSelectedValue] = useState('');
+const SelectMonthList = ({ options, onChange, selected }) => {
+// const [selectedValue, setSelectedValue] = useState(selected);
 
     const handleChange = (event) => {
         const value = event.target.value;
-        setSelectedValue(value);
+        // setSelectedValue(value);
         if (onChange) {
             onChange(value);
         }
@@ -17,7 +17,7 @@ const SelectMonthList = ({ options, onChange }) => {
             <div className="label">
                 <span className="label-text">Month</span>
             </div>
-            <select className="select select-bordered select-sm" value={selectedValue} onChange={handleChange}>
+            <select className="select select-bordered select-sm" value={selected} onChange={handleChange}>
                 <option value=''>--select--</option>
                 {options.map((option) => (
                     <option key={option.value} value={option.label} name={option.value}>

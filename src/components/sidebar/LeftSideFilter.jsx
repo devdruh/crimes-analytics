@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import getMonthsArray from "../../utils/getMonthsArray";
-import createLeftSideFilter from "../../zustand/createLeftSideFilter";
+import { useNavigate, useParams } from "react-router-dom";
 import SelectYearList from "./SelectYearList";
 import SelectMonthList from "./SelectMonthList";
-import getDaysArray from "../../utils/getDaysArray";
 import SelectDayList from "./SelectDayList";
-import getLastFiveYearsArray from "../../utils/getFiveYearArray";
 import SelectInputList from "./SelectInputList";
 import SkeletonSelectInputList from "../../skeleton/SkeletonSelectInputList";
 import useGetAttributeUniqueValues from "../../hooks/useGetAttributeUniqueValues";
-import { useShallow } from "zustand/react/shallow";
+import createLeftSideFilter from "../../zustand/createLeftSideFilter";
+import { getDaysArray, getLastFiveYearsArray, getMonthsArray } from "../../utils/formatters";
 import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from "../../utils/constants";
 
 // eslint-disable-next-line react/prop-types
@@ -25,36 +23,56 @@ const LeftSideFilter = () => {
         selectedMonth,
         selectedDay,
         setSelectedCategories,
-    } = createLeftSideFilter(useShallow((state) => ({
-        setSelectedYear: state.setSelectedYear,
-        setSelectedMonth: state.setSelectedMonth,
-        setSelectedDay: state.setSelectedDay,
-        selectedYear: state.selectedYear,
-        selectedMonth: state.selectedMonth,
-        selectedDay: state.selectedDay,
-        setSelectedCategories: state.setSelectedCategories,
-    })));
+    } = createLeftSideFilter();
+
+    const navigate = useNavigate();
 
     const handleChangeYear = (value) => {
         setSelectedYear(value);
+
+        if (selectedMonth === '' && selectedDay === '') {
+            navigate(`/filter/${value}`, { state: { key: value } });
+        } else if (selectedMonth !== '' && selectedDay === '') {
+            navigate(`/filter/${value}/${selectedMonth}`, { state: { key: value } });
+        } else if (selectedMonth !== '' && selectedDay !== '') {
+            navigate(`/filter/${value}/${selectedMonth}/${selectedDay}`, { state: { key: value } });
+        }
+
     };
 
     const handleChangeMonth = (value) => {
         setSelectedMonth(value);
 
-        if (value === '')
+        if (value === '') { 
             setSelectedDay('');
+            navigate(`/filter/${selectedYear}`, { state: { key: value } });
+            console.log('clear value');
+        } else {
+
+            if (selectedDay === '') {
+                console.log('if');
+                navigate(`/filter/${selectedYear}/${value}`, { state: { key: value } });
+            } else {
+                console.log('else');
+                navigate(`/filter/${selectedYear}/${value}/${selectedDay}`, { state: { key: value } });
+            }
+        }
+
     };
 
     const handleChangeDay = (value) => {
         setSelectedDay(value);
+        navigate(`/filter/${selectedYear}/${selectedMonth}/${value}`, { state: { key: value } });
     };
 
     const handleChangeCategory = (value) => {
         setSelectedCategories(value);
     }
 
-    const years = getLastFiveYearsArray();
+    const yearsArray = getLastFiveYearsArray();
+    const [years, setYears] = useState(yearsArray);
+    const { year, month, day } = useParams();
+
     const months = getMonthsArray();
     const findMonthValue = months.find(month => month.label === selectedMonth);
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
@@ -63,6 +81,28 @@ const LeftSideFilter = () => {
     const [categoryOption, setCategoryOption] = useState([]);
 
     useEffect(() => {
+
+        if (year) {
+            const lastFiveYears = getLastFiveYearsArray();
+            const isYearIncludes = lastFiveYears.some((i) => i.value === parseInt(year));
+            if (!isYearIncludes) {
+                setYears(() => [
+                    ...lastFiveYears,
+                    {
+                        value: parseInt(year),
+                        label: parseInt(year)
+                    }
+                ]);
+            }
+            setSelectedYear(year);
+        }
+
+        if (month) {
+            setSelectedMonth(month);
+        }
+        if (day) {
+            setSelectedDay(day);
+        }
 
         if (attributeValues.length > 0) {
             setCategoryOption(attributeValues)
@@ -74,7 +114,7 @@ const LeftSideFilter = () => {
 
         return () => clearTimeout(timeoutId);
 
-    }, [setIsLoading, attributeValues]);
+    }, [attributeValues, year, month, day, setSelectedYear, setSelectedMonth, setSelectedDay]);
 
     return (
         <>
@@ -96,13 +136,13 @@ const LeftSideFilter = () => {
                     )
                 }
                 {
-                    !isLoading && (
+                    !isLoading && selectedYear.length > 0 && (
                         <>
                             <div>
-                                <SelectYearList options={years} onChange={handleChangeYear} defaultValue={years[0].value} />
+                                <SelectYearList options={years} onChange={handleChangeYear} selected={selectedYear} />
                             </div>
                             <div>
-                                <SelectMonthList options={months} onChange={handleChangeMonth} />
+                                <SelectMonthList options={months} onChange={handleChangeMonth} selected={selectedMonth} />
                             </div>
                             <div>
                                 <SelectDayList options={days} onChange={handleChangeDay} selected={selectedDay} />
