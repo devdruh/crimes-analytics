@@ -182,7 +182,8 @@ const useSliderInit = () => {
 
                 slider.min = 0;
                 slider.max = 23;
-                slider.viewModel.setValue(0, value);
+                slider.values = [value];
+                // slider.viewModel.setValue(0, value);
                 setSliderValue(formatHour12(today));
             }
 
