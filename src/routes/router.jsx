@@ -17,14 +17,19 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/',
+                index: true,
+                element: <Home />,
+            },
+            {
+                path: '/filter',
                 // index: true,
                 element: <Home />,
-                errorElement: <RootBoundary />,
+                // errorElement: <RootBoundary />,
                 children: [
-                    {
-                        path: 'filter',
-                        element: null,
-                        children: [
+                    // {
+                    //     path: 'filter',
+                    //     element: null,
+                    //     children: [
                             {
                                 path: ':year',
                                 element: null,
@@ -75,8 +80,8 @@ export const router = createBrowserRouter([
                                     return params.day
                                 }
                             }
-                        ]
-                    }
+                    //     ]
+                    // }
                 ]
             },
         ]
