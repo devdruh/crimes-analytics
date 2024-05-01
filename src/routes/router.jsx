@@ -3,6 +3,7 @@ import Layout from "../layout/Layout"
 import { createBrowserRouter, json } from "react-router-dom"
 import { RootBoundary } from "../pages/error/RootBoundary"
 import { getDaysArray, getMonthsArray, getYearRange } from "../utils/formatters"
+import TestPage from "../pages/playground/TestPage"
 
 const months = getMonthsArray();
 const today = new Date();
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
                 path: '/',
                 index: true,
                 element: <Home />,
+            },
+            {
+                path: '/test',
+                element: <TestPage />,
             },
             {
                 path: '/filter',
