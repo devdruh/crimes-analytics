@@ -1,11 +1,18 @@
+import { useEffect } from "react"
+
 const Footer = () => {
+
+    useEffect(() => {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }, []);
+
     return (
         <div className="h-14 w-full flex flex-row justify-center items-center">
             {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3338467565655011" crossOrigin="anonymous"></script> */}
             {/* <!-- Ad unit - responsive template --> */}
-            <div>
-                Footer
-                <ins className="adsbygoogle"
+            <div className="flex">
+                {/* Footer */}
+                <ins className="adsbygoogle block"
                 // style="display:block"
                     style={{ display: 'block' }}
                     data-ad-client="ca-pub-3338467565655011"
