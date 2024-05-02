@@ -2,6 +2,7 @@ import { Outlet, useMatches } from "react-router-dom"
 import { useEffect } from "react"
 import { APP_NAME } from "../utils/constants"
 import Navbar from '../components/navbar/Navbar'
+import Footer from "../components/footer/Footer"
 
 const Layout = () => {
 
@@ -34,6 +35,7 @@ const Layout = () => {
         <>
             <Navbar />
             <Outlet />
+            <Footer />
         </>
     )
 }
