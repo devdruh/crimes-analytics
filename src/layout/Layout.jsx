@@ -25,6 +25,8 @@ const Layout = () => {
     useEffect(() => {
         if (title !== '') {
             document.title = title + ' - ' + APP_NAME
+        } else {
+            document.title = APP_NAME
         }
     }, [title])
 
