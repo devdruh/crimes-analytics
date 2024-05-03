@@ -13,8 +13,6 @@ import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from "../../utils/constants";
 // eslint-disable-next-line react/prop-types
 const LeftSideFilter = () => {
 
-    const [isLoading, setIsLoading] = useState(true);
-
     const {
         setSelectedYear,
         setSelectedMonth,
@@ -74,7 +72,7 @@ const LeftSideFilter = () => {
     const findMonthValue = months.find(month => month.label === selectedMonth);
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
 
-    const { attributeValues } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
+    const { attributeValues, loading } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
     const [categoryOption, setCategoryOption] = useState([]);
 
     useEffect(() => {
@@ -105,12 +103,6 @@ const LeftSideFilter = () => {
             setCategoryOption(attributeValues)
         }
 
-        const timeoutId = setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
-
-        return () => clearTimeout(timeoutId);
-
     }, [attributeValues, year, month, day, setSelectedYear, setSelectedMonth, setSelectedDay]);
 
     return (
@@ -118,7 +110,7 @@ const LeftSideFilter = () => {
             <div className="flex flex-col justify-between 2xl:flex-row max-sm:flex-row gap-2 pb-2">
 
                 {
-                    isLoading && (
+                    loading && (
                         <>
                             <div className="pt-3 w-full">
                                 <SkeletonSelectInputList />
@@ -133,7 +125,7 @@ const LeftSideFilter = () => {
                     )
                 }
                 {
-                    !isLoading && selectedYear.length > 0 && (
+                    !loading && selectedYear.length > 0 && (
                         <>
                             <div>
                                 <SelectYearList options={years} onChange={handleChangeYear} selected={selectedYear} />
@@ -150,18 +142,18 @@ const LeftSideFilter = () => {
             </div>
             <div className="flex gap-2 justify-between">
                 {
-                    isLoading && categoryOption && (
+                    loading && categoryOption && (
                         <div className="pt-3 w-full">
                             <SkeletonSelectInputList />
                         </div>
                     )
                 }
                 {
-                    !isLoading && categoryOption && categoryOption.length > 0 && (
+                    !loading && categoryOption && categoryOption.length > 0 && (
                         <div className="w-full">
                             <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
                         </div>
-                        )
+                    )
                 }
             </div>
         </>
