@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import LeftSideFilters from "./LeftSideFilters"
 import LoadingSpinner from "../loading/LoadingSpinner";
+import AdSenseComponent from "../google/AdSenseComponent";
 
 const LeftSidebar = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -25,6 +26,9 @@ const LeftSidebar = () => {
                 }
             </div>
             <div className="divider mt-7" />
+            <div>
+                <AdSenseComponent adClient={'ca-pub-3338467565655011'} adSlot={'9491494907'} adFormat={'auto'} />
+            </div>
         </>
     )
 }

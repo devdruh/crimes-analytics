@@ -11,7 +11,7 @@ const AdSenseComponent = ({ adClient, adSlot, adFormat }) => {
 
     return (
         <ins className="adsbygoogle"
-            style={{ display: 'block', minWidth: '100%' }}
+            style={{ display: 'block' }}
             data-ad-client={adClient}
             data-ad-slot={adSlot}
             data-ad-format={adFormat}
