@@ -46,7 +46,7 @@ const useGetAttributeUniqueValues = (field, url) => {
 
                 if (response.error) {
                     // console.log("Error: " + response.error);
-                    throw new Error(result.error)
+                    throw new Error(response.error)
                 }
 
                 const result = response?.uniqueValueInfos;
