@@ -42,13 +42,12 @@ const SelectInputList = ({ options, labelText, onChange }) => {
                     </option>
                 ))}
             </select> */}
-            <div className='divider'></div>
             <Select
-                className="react-select-container"
-                classNamePrefix="react-select"
+                classNamePrefix="daisy-select"
                 styles={{
                     control: (baseStyles) => ({
                         ...baseStyles,
+                        minHeight: '2rem',
                         backgroundColor: isDark ? 'initial' : 'inherit',
                         borderColor: isDark ? 'var(--fallback-nc,oklch(var(--nc)/0.3))' : 'var(--fallback-b1,oklch(var(--nc)))',
                         ':current': {
@@ -56,11 +55,26 @@ const SelectInputList = ({ options, labelText, onChange }) => {
 
                         }
                     }),
+                    input: (baseStyles) => ({
+                        ...baseStyles,
+                        margin: 0
+                    }),
+                    valueContainer: (baseStyles) => ({
+                        ...baseStyles,
+                        padding: '0 8px'
+                    }),
+                    clearIndicator: (baseStyles) => ({
+                        ...baseStyles,
+                        padding: '0 8px'
+                    }),
+                    dropdownIndicator: (baseStyles) => ({
+                        ...baseStyles,
+                        padding: '2px 6px'
+                    }),
                     menu: (baseStyles) => ({
                         ...baseStyles,
                         backgroundColor: isDark ? 'var(--fallback-b1,oklch(var(--b1)/1))' : 'white',
                         border: isDark ? 'solid 1px var(--fallback-b3,oklch(var(--b3)/0.5))' : ''
-
                     }),
                     option: (baseStyles) => ({
                         ...baseStyles,
