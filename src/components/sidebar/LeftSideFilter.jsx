@@ -115,7 +115,7 @@ const LeftSideFilter = () => {
 
     return (
         <>
-            <div className="flex flex-col justify-between 2xl:flex-row max-sm:flex-row gap-2 pb-5">
+            <div className="flex flex-col justify-between 2xl:flex-row max-sm:flex-row gap-2 pb-2">
 
                 {
                     isLoading && (
@@ -149,20 +149,20 @@ const LeftSideFilter = () => {
                 }
             </div>
             <div className="flex gap-2 justify-between">
-                <div className="w-full">
-                    {
-                        !isLoading && categoryOption && categoryOption.length > 0 && (
+                {
+                    isLoading && categoryOption && (
+                        <div className="pt-3 w-full">
+                            <SkeletonSelectInputList />
+                        </div>
+                    )
+                }
+                {
+                    !isLoading && categoryOption && categoryOption.length > 0 && (
+                        <div className="w-full">
                             <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
+                        </div>
                         )
-                    }
-                    {
-                        isLoading && (
-                            <div className="pt-3">
-                                <SkeletonSelectInputList />
-                            </div>
-                        )
-                    }
-                </div>
+                }
             </div>
         </>
     )
