@@ -34,7 +34,9 @@ const Layout = () => {
     return (
         <>
             <Navbar />
-            <Outlet />
+            <main id="main-content">
+                <Outlet />
+            </main>
             <Footer />
         </>
     )
