@@ -1,5 +1,6 @@
 import Home from "../pages/home/Home"
 import Layout from "../layout/Layout"
+import SocialContainer from "../components/social/SocialContainer"
 import { createBrowserRouter, json } from "react-router-dom"
 import { RootBoundary } from "../pages/error/RootBoundary"
 import { getDaysArray, getMonthsArray, getYearRange } from "../utils/formatters"
@@ -82,6 +83,13 @@ export const router = createBrowserRouter([
                     }
                 ]
             },
+            {
+                path: 'social',
+                // element: <SocialContainer />,
+                Component() {
+                    return (<SocialContainer />)
+                }
+            }
         ]
     }
 ]);
