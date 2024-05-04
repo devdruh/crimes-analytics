@@ -72,8 +72,9 @@ const LeftSideFilter = () => {
     const findMonthValue = months.find(month => month.label === selectedMonth);
     const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
 
-    const { attributeValues, loading } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
+    const { attributeValues } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
     const [categoryOption, setCategoryOption] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
 
@@ -103,6 +104,12 @@ const LeftSideFilter = () => {
             setCategoryOption(attributeValues)
         }
 
+        const timeId = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timeId);
+
     }, [attributeValues, year, month, day, setSelectedYear, setSelectedMonth, setSelectedDay]);
 
     return (
@@ -110,7 +117,7 @@ const LeftSideFilter = () => {
             <div className="flex flex-col justify-between 2xl:flex-row max-sm:flex-row gap-2 pb-2">
 
                 {
-                    loading && (
+                    isLoading && (
                         <>
                             <div className="pt-3 w-full">
                                 <SkeletonSelectInputList />
@@ -125,7 +132,7 @@ const LeftSideFilter = () => {
                     )
                 }
                 {
-                    !loading && selectedYear.length > 0 && (
+                    !isLoading && selectedYear.length > 0 && (
                         <>
                             <div>
                                 <SelectYearList options={years} onChange={handleChangeYear} selected={selectedYear} />
@@ -142,14 +149,14 @@ const LeftSideFilter = () => {
             </div>
             <div className="flex gap-2 justify-between">
                 {
-                    loading && categoryOption && (
+                    isLoading && categoryOption && (
                         <div className="pt-3 w-full">
                             <SkeletonSelectInputList />
                         </div>
                     )
                 }
                 {
-                    !loading && categoryOption && categoryOption.length > 0 && (
+                    !isLoading && categoryOption && categoryOption.length > 0 && (
                         <div className="w-full">
                             <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
                         </div>
