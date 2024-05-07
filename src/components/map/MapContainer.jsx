@@ -22,7 +22,6 @@ const MapContainer = () => {
 
         if (mapRef?.current) {
 
-            view.set('container', mapRef?.current);
             fullscreen.set('element', appRef?.current);
             view.ui.add(fullscreen, "top-left");
 
@@ -32,7 +31,9 @@ const MapContainer = () => {
             expandChart.set('content', document.getElementById(chartRef.current));
             view.ui.add(expandChart, "top-right");
 
-            return () => { mapRef.current = null && view && fullscreen && appRef };
+            view.set('container', mapRef?.current);
+
+            return () => { mapRef.current = null; view; fullscreen; appRef.current = null; };
         }
 
     }, []);

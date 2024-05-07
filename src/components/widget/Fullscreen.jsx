@@ -11,9 +11,10 @@ const handleFullscreen = reactiveUtils.watch(
     (state) => {
         const elem = fullscreen.element;
         const mapContainer = elem.firstElementChild;
+        const hasSlider = fullscreen.element.previousElementSibling.classList.contains('visible');
 
         if (state === 'ready') {
-            mapContainer.setAttribute('class', 'map-container');
+            mapContainer.setAttribute('class', `${hasSlider ? 'map-container-slider' : 'map-container ease-out duration-300'}`);
             view.set('zoom', 10);
         } else if (state === 'active') {
             mapContainer.setAttribute('class', 'h-screen w-screen');

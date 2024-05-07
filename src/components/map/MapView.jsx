@@ -1,13 +1,13 @@
-import createLeftSideFilter from "../../zustand/createLeftSideFilter"
+import { useParams } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 const MapView = ({ appRef, mapRef }) => {
 
-    const { selectedMonth } = createLeftSideFilter();
+    const { month } = useParams();
 
     return (
         <div id="app-map-container" className="app-map-container" ref={appRef}>
-            <div className={`${selectedMonth !== '' ? 'map-container-slider' : 'map-container ease-out duration-300'}`}>
+            <div className={`${month !== undefined ? 'map-container-slider' : 'map-container ease-out duration-300'}`}>
                 <div id="viewDiv" ref={mapRef}></div>
             </div>
         </div>
@@ -15,6 +15,16 @@ const MapView = ({ appRef, mapRef }) => {
 }
 
 export default MapView
+
+// return month !== undefined ? <div id="app-map-container" className="app-map-container" ref={appRef}>
+//     <div className='map-container-slider'>
+//         <div id="viewDiv" ref={mapRef}></div>
+//     </div>
+// </div> : <div id="app-map-container" className="app-map-container" ref={appRef}>
+//     <div className='map-container ease-out duration-300'>
+//         <div id="viewDiv" ref={mapRef}></div>
+//     </div>
+// </div>
 
 // < div id = "app-map-container" className = "app-map-container" ref = { appRef } >
 //     <div className="map-container">
