@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SelectYearList from "./SelectYearList";
 import SelectMonthList from "./SelectMonthList";
 import SelectDayList from "./SelectDayList";
-import SelectInputList from "./SelectInputList";
 import SkeletonSelectInputList from "../../skeleton/SkeletonSelectInputList";
-import useGetAttributeUniqueValues from "../../hooks/useGetAttributeUniqueValues";
 import createLeftSideFilter from "../../zustand/createLeftSideFilter";
+// import CategoryFilter from "./CategoryFilter";
 import { getDaysArray, getLastFiveYearsArray, getMonthsArray } from "../../utils/formatters";
 import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from "../../utils/constants";
+import useGetAttributeUniqueValues from "../../hooks/useGetAttributeUniqueValues";
+import SelectInputList from "./SelectInputList";
 
 // eslint-disable-next-line react/prop-types
-const LeftSideFilter = () => {
+const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
+
+    const { attributeValues } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
 
     const {
-        setSelectedYear,
-        setSelectedMonth,
-        setSelectedDay,
         selectedYear,
         selectedMonth,
         selectedDay,
+        setSelectedYear,
+        setSelectedMonth,
+        setSelectedDay,
         setSelectedCategories,
     } = createLeftSideFilter();
 
@@ -42,8 +45,8 @@ const LeftSideFilter = () => {
         setSelectedMonth(value);
 
         if (value === '') { 
-            setSelectedDay('');
             navigate(`/filter/${selectedYear}`, { state: { key: value } });
+            setSelectedDay('');
         } else {
 
             if (selectedDay === '') {
@@ -65,52 +68,55 @@ const LeftSideFilter = () => {
     }
 
     const yearsArray = getLastFiveYearsArray();
-    const [years, setYears] = useState(yearsArray);
-    const { year, month, day } = useParams();
-
-    const months = getMonthsArray();
-    const findMonthValue = months.find(month => month.label === selectedMonth);
-    const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
-
-    const { attributeValues } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
-    const [categoryOption, setCategoryOption] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [years, setYears] = useState(yearsArray);
+    const [months, setMonths] = useState([]);
+    const [days, setDays] = useState([]);
+    const [categoryOption, setCategoryOption] = useState([]);
 
     useEffect(() => {
 
-        if (year) {
+        const monthsArray = getMonthsArray();
+        setMonths(monthsArray);
+
+        const findMonthValue = monthsArray.find(month => month.label === selectedMonth);
+        const daysArray = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
+        setDays(daysArray);
+
+        if (urlYear) {
             const lastFiveYears = getLastFiveYearsArray();
-            const isYearIncludes = lastFiveYears.some((i) => i.value === parseInt(year));
+            const isYearIncludes = lastFiveYears.some((i) => i.value === parseInt(urlYear));
             if (!isYearIncludes) {
                 setYears(() => [
                     ...lastFiveYears,
                     {
-                        value: parseInt(year),
-                        label: parseInt(year)
+                        value: parseInt(urlYear),
+                        label: parseInt(urlYear)
                     }
                 ]);
             }
-            setSelectedYear(year);
+            setSelectedYear(urlYear);
         }
 
-        if (month) {
-            setSelectedMonth(month);
+        if (urlMonth) {
+            setSelectedMonth(urlMonth);
         }
-        if (day) {
-            setSelectedDay(day);
+
+        if (urlDay) {
+            setSelectedDay(urlDay);
         }
 
         if (attributeValues.length > 0) {
-            setCategoryOption(attributeValues)
+            setCategoryOption(attributeValues);
         }
 
         const timeId = setTimeout(() => {
             setIsLoading(false);
         }, 1000);
 
-        return () => clearTimeout(timeId);
+        return () => { clearTimeout(timeId); setSelectedMonth(''); setSelectedDay(''); setSelectedYear(''); setMonths([]); setDays([]); setCategoryOption([]); }
 
-    }, [attributeValues, year, month, day, setSelectedYear, setSelectedMonth, setSelectedDay]);
+    }, [urlYear, urlMonth, urlDay, selectedDay, selectedMonth, selectedYear, setSelectedYear, setSelectedMonth, setSelectedDay, attributeValues]);
 
     return (
         <>
@@ -132,7 +138,7 @@ const LeftSideFilter = () => {
                     )
                 }
                 {
-                    !isLoading && selectedYear.length > 0 && (
+                    !isLoading && years.length > 0 && months.length > 0 && (
                         <>
                             <div>
                                 <SelectYearList options={years} onChange={handleChangeYear} selected={selectedYear} />

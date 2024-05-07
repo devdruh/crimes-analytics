@@ -46,9 +46,11 @@ const useGetMCIFeatureCount = (url) => {
             }
         }
 
-        getFeatureCount();
+        if (selectedYear !== '') {
+            getFeatureCount();
+        }
 
-    }, [url, sqlQuery]);
+    }, [url, sqlQuery, selectedYear]);
 
     return { loading, featureCount }
 }

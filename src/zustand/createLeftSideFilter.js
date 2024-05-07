@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const createLeftSideFilter = create((set) => ({
-    selectedYear: '2024',
+    selectedYear: '',
     setSelectedYear: (selectedYear) => set({ selectedYear }),
     selectedMonth: '',
     setSelectedMonth: (selectedMonth) => set({ selectedMonth }),

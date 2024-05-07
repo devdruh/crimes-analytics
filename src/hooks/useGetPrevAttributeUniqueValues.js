@@ -9,7 +9,7 @@ import { getDaysArray, getMonthsArray, getPreviousMonth } from '../utils/formatt
 const useGetPrevAttributeUniqueValues = (field, url) => {
 
     const [prevAttributeValues, setPrevAttributeValues] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [prevLoading, setPrevLoading] = useState(true);
 
     const {
         selectedYear,
@@ -59,7 +59,7 @@ const useGetPrevAttributeUniqueValues = (field, url) => {
         const findValues = async () => {
 
             try {
-                setLoading(true);
+                setPrevLoading(true);
                 const response = await uniqueValues({ layer: layer, field: field, sqlWhere: sqlQuery, signal: signal })
                 if (response.error) {
                     // console.log("Error: " + response.error);
@@ -93,17 +93,19 @@ const useGetPrevAttributeUniqueValues = (field, url) => {
                     position: "bottom-right"
                 });
             } finally {
-                setLoading(false);
+                setPrevLoading(false);
             }
 
             return () => controller.abort() && setPrevAttributeValues([])
         }
 
-        findValues();
+        if (selectedYear !== '') {
+            findValues();
+        }
 
-    }, [sqlQuery, field, url, selectedCategories]);
+    }, [sqlQuery, field, url, selectedCategories, selectedYear]);
 
-    return { prevAttributeValues, loading }
+    return { prevAttributeValues, prevLoading }
 }
 
 export default useGetPrevAttributeUniqueValues

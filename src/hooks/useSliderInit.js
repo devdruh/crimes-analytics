@@ -11,6 +11,7 @@ const useSliderInit = () => {
 
     const { setSliderValue } = createSliderWidget();
     const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter();
+
     let layerSymbol = useRef(null);
 
     useEffect(() => {
@@ -157,7 +158,7 @@ const useSliderInit = () => {
 
         const sliderInit = () => {
 
-            if (selectedMonth !== '' && selectedDay === '') {
+            if (selectedMonth !== '' && selectedDay === '' && selectedYear !== '') {
                 const value = today.getDate();
                 const findMonthValue = months.find(month => month.label === selectedMonth);
                 const days = getDaysArray(parseInt(selectedYear), parseInt(findMonthValue?.value));
@@ -188,13 +189,13 @@ const useSliderInit = () => {
             slider.on("thumb-drag", handleThumbDrag);
             view.whenLayerView(layerMajorCrimeIndicators).then(setupHoverTooltip);
 
-            return () => { handleThumbDrag && layerMajorCrimeIndicators.renderer }
+            return () => { handleThumbDrag; layerMajorCrimeIndicators.renderer; setSliderValue(''); }
 
         }
 
         const initLayerRenderer = layerMajorCrimeIndicators.renderer;
 
-        if (selectedMonth !== '') {
+        if (selectedYear !== '') {
             sliderInit();
 
             if (initLayerRenderer?.visualVariables === null) {
@@ -206,7 +207,7 @@ const useSliderInit = () => {
             layerMajorCrimeIndicators.renderer = layerSymbol.current
         }
 
-        return () => { handleThumbDrag && layerMajorCrimeIndicators.renderer }
+        return () => { handleThumbDrag; layerMajorCrimeIndicators.renderer; setSliderValue(''); }
 
     }, [setSliderValue, selectedYear, selectedMonth, selectedDay]);
 

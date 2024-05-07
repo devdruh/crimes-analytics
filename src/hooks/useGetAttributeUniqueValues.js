@@ -4,7 +4,6 @@ import createLeftSideFilter from '../zustand/createLeftSideFilter';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import toast from 'react-hot-toast';
 import getToastNotification from '../utils/getToastNotification';
-import { useShallow } from 'zustand/react/shallow';
 
 const useGetAttributeUniqueValues = (field, url) => {
 
@@ -17,14 +16,9 @@ const useGetAttributeUniqueValues = (field, url) => {
         selectedMonth,
         selectedDay,
         selectedCategories,
-    } = createLeftSideFilter(useShallow((state) => ({
-        selectedYear: state.selectedYear,
-        selectedMonth: state.selectedMonth,
-        selectedDay: state.selectedDay,
-        selectedCategories: state.selectedCategories,
-    })));
+    } = createLeftSideFilter();
 
-    let sqlQuery = `OCC_YEAR='${selectedYear}'`;
+    let sqlQuery = `OCC_YEAR = '${selectedYear}'`;
     selectedMonth !== '' ? sqlQuery += ` AND OCC_MONTH = '${selectedMonth}'` : '';
     selectedDay !== '' ? sqlQuery += ` AND OCC_DAY = '${selectedDay}'` : '';
 
@@ -88,12 +82,14 @@ const useGetAttributeUniqueValues = (field, url) => {
                 setLoading(false);
             }
 
-            return () => controller.abort() && setAttributeValues([])
+            return () => { controller.abort(); setAttributeValues([]); setZeroAttributeValues([]); }
         }
 
-        findValues();
+        if (selectedYear !== '') {
+            findValues();
+        }
 
-    }, [sqlQuery, field, url, selectedCategories]);
+    }, [sqlQuery, field, url, selectedYear, selectedCategories]);
 
     return { attributeValues, zeroAttributeValues, loading }
 }

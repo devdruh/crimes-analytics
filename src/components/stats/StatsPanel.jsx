@@ -23,8 +23,8 @@ const StatsPanel = ({ data, featureCount }) => {
                                 item.count === 0 ? 'No available data' :
                                     <p className='truncate'> {Math.abs(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2).replace(/\.0+$/, '')}%
                                         {
-                                            Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed() > 0 ? ' more than ' :
-                                                Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed() === 0 ? ' ?? ' : ' less than '
+                                            Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2) > 0 ? ' more than ' :
+                                                Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2) === 0 ? ' ... ' : ' less than '
                                         }
                                         {
                                             selectedDay !== '' ? 'yesterday' : selectedMonth !== '' ? 'last month' : 'last year'
@@ -32,9 +32,6 @@ const StatsPanel = ({ data, featureCount }) => {
                                     </p>
                             }
                         </div>
-                        {/* <div className="stat-value text-primary">{selectedCategory !== '' && item.value === selectedCategory ? featureCount : item.count}</div> */}
-                        {/* <div className="stat-desc">{item.count === 0 ? 'No available data' : '...% more than last month'}</div> */}
-                        {/* 100 - 40 = 60 , 60/40 = 1.5, 1.5 * 100 = 150% */}
                     </div>
                 ))
             }
