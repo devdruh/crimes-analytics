@@ -44,12 +44,12 @@ const Navbar = () => {
     }, [isDark]);
 
     return (
-        <nav className="navbar bg-base-100 border-b border-neutral-content">
+        <nav className="navbar border-b border-neutral-content bg-gradient-to-r from-primary from-30% to-blue-500 dark:from-base-100">
             <div className="flex-1">
-                <Link to={'/'} className="btn btn-link text-xl no-underline hover:no-underline text-opacity-90">{APP_NAME}</Link>
+                <Link to={'/'} className="btn btn-link text-xl no-underline hover:no-underline text-base-100 dark:text-neutral-content">{APP_NAME}</Link>
             </div>
             <div className="navbar-end">
-                <Link className="btn btn-ghost btn-circle" to={'/social'} title="Social Media">
+                <Link className="btn btn-ghost btn-circle text-base-100 dark:text-neutral-content" to={'/social'} title="Social Media">
                     <svg
                         fill="none"
                         stroke="currentColor"
@@ -68,7 +68,7 @@ const Navbar = () => {
                     </svg>
                 </Link>
                 <div className="mr-2">
-                    <label className="swap swap-rotate btn btn-circle btn-ghost" title="Switch Theme">
+                    <label className="swap swap-rotate btn btn-circle btn-ghost text-base-100 dark:text-neutral-content" title="Switch Theme">
                         {/* this hidden checkbox controls the state */}
                         <input type="checkbox" className="theme-controller" value="synthwave" checked={isDark} onChange={() => setIsDark(!isDark)} />
                         <svg className="swap-off fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" /></svg>

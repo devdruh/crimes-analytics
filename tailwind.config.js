@@ -8,7 +8,7 @@ export default {
     theme: {
         extend: {},
     },
-    darkMode: ['selector', '[data-mode="dark"]'],
+    darkMode: ['selector', '[data-theme="dark"]'],
     daisyui: {
         // themes: false,
         themes: [
