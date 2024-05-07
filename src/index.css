@@ -10,29 +10,6 @@
     @apply flex justify-end right-2 absolute top-1/2 
 }
 
-.map-container {
-    height: calc(100vh - 178px);
-}
-
-.map-container-slider {
-    height: calc(100vh - 250px);
-}
-
-#sliderContainer {
-    flex: 0 0 80px;
-    order: 2;
-}
-
-#sliderValue {
-    flex: 0 0 100px;
-    order: 1;
-}
-
-#sliderInnerContainer {
-    flex: 1 1 auto;
-    order: 2;
-}
-
 /**
 * Play/Stop toggle button
 */
@@ -83,6 +60,33 @@
     transform: translate3d(-50%, -125%, 0);
 }
 
+.esri-widget {
+    @apply bg-base-100
+}
+
+.map-container {
+    height: calc(100vh - 178px);
+}
+
+.map-container-slider {
+    height: calc(100vh - 249px);
+}
+
+#sliderContainer {
+    flex: 0 0 80px;
+    order: 2;
+}
+
+#sliderValue {
+    flex: 0 0 100px;
+    order: 1;
+}
+
+#sliderInnerContainer {
+    flex: 1 1 auto;
+    order: 2;
+}
+
 @media screen and (max-width: 640px){
     .map-container {
         height: calc(100vh - 20vh);
@@ -113,14 +117,18 @@
     }
 }
 
-.esri-widget {
-    @apply bg-base-100
-}
 
-.stats-panel {    
-    /* border-radius: var(--rounded-box, 1rem); */
-    --tw-bg-opacity: 1;
-    background-color: var(--fallback-b1, oklch(var(--b1) / var(--tw-bg-opacity)));
-    --tw-text-opacity: 1;
-    color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)))
+@layer components {
+
+    .stats {
+        @apply rounded-none
+    }
+
+    .stats-panel {    
+        /* border-radius: var(--rounded-box, 1rem); */
+        --tw-bg-opacity: 1;
+        background-color: var(--fallback-b1, oklch(var(--b1) / var(--tw-bg-opacity)));
+        --tw-text-opacity: 1;
+        color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)))
+    }
 }
