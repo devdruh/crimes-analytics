@@ -1,13 +1,16 @@
 import getRandomStatsIcon from '../../utils/getRandomStatsIcon'
+import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 
 // eslint-disable-next-line react/prop-types
 const StatsPanel = ({ data, featureCount }) => {
+
+    const { selectedDay, selectedMonth } = createLeftSideFilter();
 
     return (
         <>
             {
                 // eslint-disable-next-line react/prop-types
-                data && data.map((item, i) => (
+                data && data.length > 0 && data.map((item, i) => (
 
                     <div className="stat" key={i + 1}>
                         <div className="stat-figure text-primary">
@@ -15,7 +18,20 @@ const StatsPanel = ({ data, featureCount }) => {
                         </div>
                         <div className="stat-title text-base-content">{item.value}</div>
                         <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{item.count}</div>
-                        <div className="stat-desc truncate">{item.count === 0 ? 'No available data' : <p className='truncate'>...% more than last month</p>}</div>
+                        <div className="stat-desc truncate">
+                            {
+                                item.count === 0 ? 'No available data' :
+                                    <p className='truncate'> {Math.abs(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2).replace(/\.0+$/, '')}%
+                                        {
+                                            Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed() > 0 ? ' more than ' :
+                                                Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed() === 0 ? ' ?? ' : ' less than '
+                                        }
+                                        {
+                                            selectedDay !== '' ? 'yesterday' : selectedMonth !== '' ? 'last month' : 'last year'
+                                        }
+                                    </p>
+                            }
+                        </div>
                         {/* <div className="stat-value text-primary">{selectedCategory !== '' && item.value === selectedCategory ? featureCount : item.count}</div> */}
                         {/* <div className="stat-desc">{item.count === 0 ? 'No available data' : '...% more than last month'}</div> */}
                         {/* 100 - 40 = 60 , 60/40 = 1.5, 1.5 * 100 = 150% */}

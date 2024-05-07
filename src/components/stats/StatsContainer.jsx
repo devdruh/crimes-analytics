@@ -3,6 +3,7 @@ import { useShallow } from 'zustand/react/shallow'
 import StatsPanel from './StatsPanel';
 import useGetMCIFeatureCount from '../../hooks/useGetMCIFeatureCount';
 import useGetAttributeUniqueValues from '../../hooks/useGetAttributeUniqueValues';
+import useGetPrevAttributeUniqueValues from '../../hooks/useGetPrevAttributeUniqueValues';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import SkeletonStatsPanel from '../../skeleton/SkeletonStatsPanel';
 import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from '../../utils/constants';
@@ -10,9 +11,11 @@ import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from '../../utils/constants';
 const StatsContainer = () => {
 
     const { loading, attributeValues, zeroAttributeValues } = useGetAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
-    const { featureCount } = useGetMCIFeatureCount(API_MCI_ENDPOINT)
+    const { featureCount } = useGetMCIFeatureCount(API_MCI_ENDPOINT);
     const { selectedCategories } = createLeftSideFilter(useShallow((state) => ({ selectedCategories: state.selectedCategories })));
     const [data, setData] = useState([]);
+
+    const { prevAttributeValues } = useGetPrevAttributeUniqueValues(API_MCI_CATEGORY, API_MCI_ENDPOINT);
 
     useEffect(() => {
 
@@ -27,6 +30,11 @@ const StatsContainer = () => {
                     zeroAttributeValues[index].count = findSelectedCategory.count;
                 }
 
+                const prevAttributeValue = prevAttributeValues.find(item => item.value === element.value);
+                if (prevAttributeValue !== undefined) {
+                    element['prevCount'] = prevAttributeValue.count;
+                }
+
             }
             setData(zeroAttributeValues);
 
@@ -35,12 +43,21 @@ const StatsContainer = () => {
             if (attributeValues.length === 0) {
                 setData(zeroAttributeValues);
             } else {
+                for (let index = 0; index < attributeValues.length; index++) {
+                    const element = attributeValues[index];
+                    if (prevAttributeValues.length > 0) {
+                        const prevAttributeValue = prevAttributeValues.find(item => item.value === element.value);
+                        if (prevAttributeValue !== undefined) {
+                            element['prevCount'] = prevAttributeValue.count;
+                        }
+                    }
+                }
                 setData(attributeValues);
             }
 
         }
 
-    }, [attributeValues, zeroAttributeValues, selectedCategories]);
+    }, [attributeValues, zeroAttributeValues, selectedCategories, prevAttributeValues]);
 
     return (
         <div className="shadow max-[1800px]:grid max-md:grid-cols-2 max-2xl:grid-cols-3 max-[1800px]:grid-cols-3 min-[1800px]:stats min-[1800px]:flex min-[1800px]:justify-between">

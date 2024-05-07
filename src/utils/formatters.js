@@ -76,3 +76,12 @@ export const formatCategoryQuery = (categories) => {
 
     return categories.length > 0 ? categoryQuery : []
 }
+
+export const getPreviousMonth = (month) => {
+
+    const months = getMonthsArray();
+    let previousMonthIndex = months.findIndex(e => e.label === month) - 1;
+
+    return previousMonthIndex < 0 ? months[months.length - 1] : months[previousMonthIndex];
+
+}
