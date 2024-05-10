@@ -1,3 +1,5 @@
+import { DAYS_OF_THE_WEEK, MONTHS_OF_THE_YEAR } from "./constants";
+
 export const formatHour12 = (time) => {
     return time.toLocaleString('en-US', { hour: 'numeric', hour12: true });
 }
@@ -28,13 +30,9 @@ export const getDaysArray = (year, month) => {
 export const getMonthsArray = () => {
 
     const monthsArray = [];
-    const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
 
     for (let i = 0; i < 12; i++) {
-        monthsArray.push({ value: i + 1, label: monthNames[i] });
+        monthsArray.push({ value: i + 1, label: MONTHS_OF_THE_YEAR[i] });
     }
 
     return monthsArray;
@@ -85,3 +83,50 @@ export const getPreviousMonth = (month) => {
     return previousMonthIndex < 0 ? months[months.length - 1] : months[previousMonthIndex];
 
 }
+
+export const formatMonthToNumber = (data) => {
+    return new Date(Date.parse(data + " 1, 2000")).getMonth();
+}
+
+export const formatDaysOrder = (data) => {
+    return data.sort((a, b) => DAYS_OF_THE_WEEK.indexOf(a.label) - DAYS_OF_THE_WEEK.indexOf(b.label));
+}
+
+export const getMinValue = (data) => {
+    const clone = [...data];
+    let result = clone.reduce((min, current) => {
+        if (current.value !== null && (min.value === null || current.value < min.value)) {
+            return current;
+        } else {
+            return min;
+        }
+    }, { label: "", value: null });
+
+    return result
+}
+
+export const getMaxValue = (data) => {
+    const clone = [...data];
+    let result = clone.reduce((max, current) => {
+        if (current.value !== null && (max.value === null || current.value > max.value)) {
+            return current;
+        } else {
+            return max;
+        }
+    }, { label: "", value: null });
+
+    return result
+}
+
+// Function to convert label value to 12-hour format
+export const convertTo12Hour = (label) => {
+    if (label === 0)
+        return "12 AM";
+    else if (label === 12)
+        return "12 PM";
+    else if (label < 12)
+        return `${label} AM`;
+    else
+        return `${label - 12} PM`;
+}
+

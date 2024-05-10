@@ -10,6 +10,7 @@ import { getDaysArray, getLastFiveYearsArray, getMonthsArray } from "../../utils
 import { API_MCI_CATEGORY, API_MCI_ENDPOINT } from "../../utils/constants";
 import useGetAttributeUniqueValues from "../../hooks/useGetAttributeUniqueValues";
 import SelectInputList from "./SelectInputList";
+import createActiveTab from "../../zustand/createActiveTab";
 
 // eslint-disable-next-line react/prop-types
 const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
@@ -25,6 +26,8 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
         setSelectedDay,
         setSelectedCategories,
     } = createLeftSideFilter();
+
+    const { activeTab } = createActiveTab();
 
     const navigate = useNavigate();
 
@@ -44,7 +47,7 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
     const handleChangeMonth = (value) => {
         setSelectedMonth(value);
 
-        if (value === '') { 
+        if (value === '') {
             navigate(`/filter/${selectedYear}`, { state: { key: value } });
             setSelectedDay('');
         } else {
@@ -128,12 +131,18 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
                             <div className="pt-3 w-full">
                                 <SkeletonSelectInputList />
                             </div>
-                            <div className="pt-3 w-full">
-                                <SkeletonSelectInputList />
-                            </div>
-                            <div className="pt-3 w-full">
-                                <SkeletonSelectInputList />
-                            </div>
+                            {
+                                activeTab === 1 && (
+                                    <>
+                                        <div className="pt-3 w-full">
+                                            <SkeletonSelectInputList />
+                                        </div>
+                                        <div className="pt-3 w-full">
+                                            <SkeletonSelectInputList />
+                                        </div>
+                                    </>
+                                )
+                            }
                         </>
                     )
                 }
@@ -143,32 +152,42 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
                             <div>
                                 <SelectYearList options={years} onChange={handleChangeYear} selected={selectedYear} />
                             </div>
-                            <div>
-                                <SelectMonthList options={months} onChange={handleChangeMonth} selected={selectedMonth} />
-                            </div>
-                            <div>
-                                <SelectDayList options={days} onChange={handleChangeDay} selected={selectedDay} />
-                            </div>
+                            {
+                                activeTab === 1 && (
+                                    <>
+                                        <div>
+                                            <SelectMonthList options={months} onChange={handleChangeMonth} selected={selectedMonth} />
+                                        </div>
+                                        <div>
+                                            <SelectDayList options={days} onChange={handleChangeDay} selected={selectedDay} />
+                                        </div>
+                                    </>
+                                )
+                            }
                         </>
                     )
                 }
             </div>
-            <div className="flex gap-2 justify-between">
-                {
-                    isLoading && categoryOption && (
-                        <div className="pt-3 w-full">
-                            <SkeletonSelectInputList />
-                        </div>
-                    )
-                }
-                {
-                    !isLoading && categoryOption && categoryOption.length > 0 && (
-                        <div className="w-full">
-                            <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
-                        </div>
-                    )
-                }
-            </div>
+            {
+                activeTab === 1 && (
+                    <div className="flex gap-2 justify-between">
+                        {
+                            isLoading && categoryOption && (
+                                <div className="pt-3 w-full">
+                                    <SkeletonSelectInputList />
+                                </div>
+                            )
+                        }
+                        {
+                            !isLoading && categoryOption && categoryOption.length > 0 && (
+                                <div className="w-full">
+                                    <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
+                                </div>
+                            )
+                        }
+                    </div>
+                )
+            }
         </>
     )
 }

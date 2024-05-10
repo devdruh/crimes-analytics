@@ -1,6 +1,6 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import { API_MCI_ENDPOINT } from './constants';
-import { formatHour12 } from './formatters';
+import { API_MCI_ENDPOINT, API_YTD_CRIME_WM, MONTHS_OF_THE_YEAR } from './constants';
+import { convertTo12Hour, formatDaysOrder, formatHour12, formatMonthToNumber } from './formatters';
 
 export const layerMajorCrimeIndicators = new FeatureLayer({
     id: 'major-crime-indicators',
@@ -8,6 +8,109 @@ export const layerMajorCrimeIndicators = new FeatureLayer({
     outFields: "*",
     effect: "bloom(2 0 0.5)"
 });
+
+export const layerMajorCrimeYTD = new FeatureLayer({
+    id: 'major-crime-ytd',
+    url: API_YTD_CRIME_WM,
+    outFields: "*",
+});
+
+export const layerStatsQuery = async (where, groupStats) => {
+    let query = layerMajorCrimeIndicators.createQuery();
+    query.where = where;
+    query.outStatistics = [
+        {
+            statisticType: "count",
+            onStatisticField: "*",
+            outStatisticFieldName: "count"
+        }
+    ];
+    query.groupByFieldsForStatistics = [groupStats];
+    query.orderByFields = [groupStats];
+
+    let result = await layerMajorCrimeIndicators.queryFeatures(query);
+
+    return result;
+}
+
+export const queryMonthsStats = async (where) => {
+
+    const response = await layerStatsQuery(where, ['REPORT_MONTH']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            label: element.attributes.REPORT_MONTH,
+            value: element.attributes.count
+        });
+    }
+
+    MONTHS_OF_THE_YEAR.forEach((month) => {
+        const monthExist = data.find((i) => i.label === month);
+
+        if (!monthExist) {
+            data.push({
+                label: month,
+                value: null
+            });
+        }
+    });
+
+    return data.sort((a, b) => formatMonthToNumber(a.label) - formatMonthToNumber(b.label));
+}
+
+export const queryWeeksStats = async (where) => {
+
+    const response = await layerStatsQuery(where, ['REPORT_DOW']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            label: element.attributes.REPORT_DOW.replace(/\s/g, ''),
+            value: element.attributes.count
+        });
+    }
+
+    return formatDaysOrder(data);
+
+}
+
+export const queryDaysStats = async (where) => {
+
+    const response = await layerStatsQuery(where, ['REPORT_DAY']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            label: element.attributes.REPORT_DAY,
+            value: element.attributes.count
+        });
+    }
+
+    return data;
+
+}
+
+export const queryHoursStats = async (where) => {
+
+    const response = await layerStatsQuery(where, ['REPORT_HOUR']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            text: convertTo12Hour(element.attributes.REPORT_HOUR),
+            label: element.attributes.REPORT_HOUR,
+            value: element.attributes.count
+        });
+    }
+
+    return data;
+
+}
 
 export const layerMCIRenderer = (value, selectedDay, selectedMonth) => {
 
