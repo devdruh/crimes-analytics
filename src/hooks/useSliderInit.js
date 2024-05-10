@@ -101,7 +101,7 @@ const useSliderInit = () => {
             const style = tooltip.style;
 
             tooltip.setAttribute("role", "tooltip");
-            tooltip.classList.add("tooltip");
+            tooltip.classList.add("tooltip-map");
 
             const textElement = document.createElement("div");
             textElement.classList.add("esri-widget");
