@@ -1,4 +1,4 @@
-import { getChartLineIcon, getIconClockTime } from "../../utils/icons"
+import { getChartLineIcon, getIconClockTime, iconCalendarDay, iconCalendarMonth, iconCalendarWeek } from "../../utils/icons"
 
 // eslint-disable-next-line react/prop-types
 const FrequencyPanel = ({ data }) => {
@@ -10,7 +10,10 @@ const FrequencyPanel = ({ data }) => {
                     <div className="stat border-r border-l-0 last:border-r-0" key={i + 1}>
                         <div className="stat-figure text-primary">
                             {
-                                item.name === 'hour' ? getIconClockTime(item.icon) : getChartLineIcon(item.icon)
+                                item.name === 'month' ? iconCalendarMonth :
+                                    item.name === 'week' ? iconCalendarWeek :
+                                        item.name === 'day' ? iconCalendarDay :
+                                            item.name === 'hour' ? getIconClockTime(item.icon) : getChartLineIcon(item.icon)
                             }
                         </div>
                         <div className="stat-title text-base-content">{item.label}</div>
