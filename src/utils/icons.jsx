@@ -103,6 +103,15 @@ export const iconClockTimeOneOutline =
         <path d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10C6.47 22 2 17.5 2 12S6.5 2 12 2m3.3 5.8l-3 5.2H11V7h1.5v2.65l1.5-2.6 1.3.75z" />
     </svg>;
 
+export const iconClockTimeTwoOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10C6.47 22 2 17.5 2 12S6.5 2 12 2m.5 11H11V7h1.5v4.26l3.7-2.13.75 1.3L12.5 13z" />
+    </svg>;
+
 export const iconClockTimeThreeOutline =
     <svg
         viewBox="0 0 24 24"
@@ -121,11 +130,82 @@ export const iconClockTimeFourOutline =
         <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m5 11.9l-.7 1.3-5.3-2.9V7h1.5v4.4l4.5 2.5z" />
     </svg>;
 
+export const iconClockTimeFiveOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m3.3 14.2L14 17l-3-5.2V7h1.5v4.4l2.8 4.8z" />
+    </svg>;
+
+export const iconClockTimeSixOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m.5 5v10H11V7h1.5z" />
+    </svg>;
+
+export const iconClockTimeSevenOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m.5 5v5.2L9.8 17l-1.3-.8 2.5-4.4V7h1.5z" />
+    </svg>;
+
+export const iconClockTimeEightOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m.5 10.8l-4.8 2.8-.7-1.4 4-2.3V7h1.5v5.8z" />
+    </svg>;
+
+export const iconClockTimeNineOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m.5 5v6H7v-1.5h4V7h1.5z" />
+    </svg>;
+
+export const iconClockTimeTenOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m.5 11H11l-4-2.3.8-1.3 3.3 1.9V7h1.5v6z" />
+    </svg>;
+
+export const iconClockTimeElevenOutline =
+    <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-8 h-8"
+    >
+        <path d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8m0-18c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2m.5 5v6H11L8.5 8.6l1.3-.8L11 10V7h1.5z" />
+    </svg>;
+
 export const getIconClockTime = (time) => {
     if (time === 0 || time === 12) return iconClockTimeTwelveOutline;
-    if (time === 1) return iconClockTimeOneOutline;
-    if (time === 3) return iconClockTimeThreeOutline;
-    if (time === 4) return iconClockTimeFourOutline;
+    if (time === 1 || time === 13) return iconClockTimeOneOutline;
+    if (time === 2 || time === 14) return iconClockTimeTwoOutline;
+    if (time === 3 || time === 15) return iconClockTimeThreeOutline;
+    if (time === 4 || time === 16) return iconClockTimeFourOutline;
+    if (time === 5 || time === 17) return iconClockTimeFiveOutline;
+    if (time === 6 || time === 18) return iconClockTimeSixOutline;
+    if (time === 7 || time === 19) return iconClockTimeSevenOutline;
+    if (time === 8 || time === 20) return iconClockTimeEightOutline;
+    if (time === 9 || time === 21) return iconClockTimeNineOutline;
+    if (time === 10 || time === 22) return iconClockTimeTenOutline;
+    if (time === 11 || time === 23) return iconClockTimeElevenOutline;
 
     return iconTimeOutline
 
