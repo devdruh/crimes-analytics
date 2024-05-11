@@ -66,7 +66,11 @@
 }
 
 .map-container {
-    height: calc(100vh - 178px);
+    height: calc(100vh - 234px);
+}
+
+.map-container-frequency {
+    height: calc(100vh - 346px);
 }
 
 .map-container-slider {
