@@ -1,11 +1,17 @@
 /* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
     content: [
         "./index.html",
         "./src/**/*.{js,jsx,ts,tsx}",
     ],
     theme: {
+        screens: {
+            'xxs': '391px',
+            'xs': '431px',
+            ...defaultTheme.screens,
+        },
         extend: {},
     },
     darkMode: ['selector', '[data-theme="dark"]'],

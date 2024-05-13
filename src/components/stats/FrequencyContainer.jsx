@@ -8,7 +8,7 @@ const FrequencyContainer = () => {
     const { data, loading } = useStatsFrequency();
 
     return (
-        <div className="shadow-md grid grid-cols-4">
+        <div className="shadow-md grid grid-cols-4 max-sm:grid-cols-2">
             {
                 loading && <SkeletonFrequencyPanel data={data} />
             }

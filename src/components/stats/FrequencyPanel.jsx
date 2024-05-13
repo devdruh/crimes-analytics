@@ -7,7 +7,16 @@ const FrequencyPanel = ({ data }) => {
             {
                 // eslint-disable-next-line react/prop-types
                 data.map((item, i) => (
-                    <div className="stat border-r border-l-0 last:border-r-0" key={i + 1}>
+                    <div className={`stat border-r border-l-0 last:border-r-0 
+                    ${i === 0 ? 'max-sm:order-1' :
+                            i === 1 ? 'max-sm:order-3' :
+                                i === 2 ? 'max-sm:order-5' :
+                                    i === 3 ? 'max-sm:order-7' :
+                                        i === 4 ? 'max-sm:order-2' :
+                                            i === 5 ? 'max-sm:order-4' :
+                                                i === 6 ? 'max-sm:order-6' :
+                                                    i === 7 ? 'max-sm:order-8' :
+                                                        ''}  }`} key={i + 1}>
                         <div className="stat-figure text-primary">
                             {
                                 item.name === 'month' ? iconCalendarMonth :
