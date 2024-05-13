@@ -123,7 +123,7 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
 
     return (
         <>
-            <div className="flex flex-col justify-between 2xl:flex-row max-sm:flex-row gap-2 pb-2">
+            <div className="flex flex-col 2xl:flex-row max-sm:flex-row gap-2 pb-2">
 
                 {
                     isLoading && (
@@ -149,16 +149,16 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
                 {
                     !isLoading && years.length > 0 && months.length > 0 && (
                         <>
-                            <div>
+                            <div className={`${activeTab === 3 && 'w-full'} flex-1`}>
                                 <SelectYearList options={years} onChange={handleChangeYear} selected={selectedYear} />
                             </div>
                             {
                                 activeTab === 1 && (
                                     <>
-                                        <div>
+                                        <div className="flex-1">
                                             <SelectMonthList options={months} onChange={handleChangeMonth} selected={selectedMonth} />
                                         </div>
-                                        <div>
+                                        <div className="flex-1">
                                             <SelectDayList options={days} onChange={handleChangeDay} selected={selectedDay} />
                                         </div>
                                     </>

@@ -2,7 +2,7 @@
 // import { useState } from 'react'
 
 const SelectYearList = ({ options, onChange, selected }) => {
-// const [selectedValue, setSelectedValue] = useState(selected);
+    // const [selectedValue, setSelectedValue] = useState(selected);
     const handleChange = (event) => {
         const value = event.target.value;
         // setSelectedValue(value);
@@ -12,7 +12,7 @@ const SelectYearList = ({ options, onChange, selected }) => {
     };
 
     return (
-        <label className="form-control w-full max-w-xs">
+        <label className="form-control w-full">
             <div className="label">
                 <span className="label-text">Year</span>
             </div>

@@ -13,7 +13,7 @@ const SelectDayList = ({ options, onChange, selected }) => {
     };
 
     return (
-        <label className="form-control w-full max-w-xs">
+        <label className="form-control w-full">
             <div className="label">
                 <span className="label-text">Day</span>
             </div>
