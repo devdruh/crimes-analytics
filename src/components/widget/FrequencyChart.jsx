@@ -4,6 +4,7 @@ import FrequencyHighCharts from '../chart/FrequencyHighCharts'
 import createSelectedFrequency from '../../zustand/createSelectedFrequency';
 import useGetFrequency from '../../hooks/useGetFrequency';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
+import expandFrequencyChart from './ExpandFrequencyChart';
 
 const FrequencyChart = ({ id }) => {
 
@@ -12,6 +13,11 @@ const FrequencyChart = ({ id }) => {
     const { data } = useGetFrequency();
 
     useEffect(() => {
+
+        if (data.length > 0) {
+            // expandFrequencyChart.iconNumber = 1;
+            expandFrequencyChart.expanded = true;
+        }
 
     }, [selectedFrequency, selectedYear, data]);
 
