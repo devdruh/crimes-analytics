@@ -9,6 +9,9 @@ import useLayerInit from "../../hooks/useLayerInit";
 import expandChart from "../widget/ExpandChart";
 import Chart from "../widget/Chart";
 import Spinner from "../widget/Spinner";
+import FrequencyChart from "../widget/FrequencyChart";
+import expandFrequencyChart from "../widget/ExpandFrequencyChart";
+import createLeftSideFilter from "../../zustand/createLeftSideFilter";
 
 const MapContainer = () => {
 
@@ -16,37 +19,47 @@ const MapContainer = () => {
     const appRef = useRef(null);
     const sliderRef = useRef(null);
     const chartRef = useRef('chart-ref');
+    const frequencyChartRef = useRef('frequency-ref');
     const loadingRef = useRef(null);
+
+    const { selectedYear } = createLeftSideFilter();
 
     useLayerInit();
 
     useEffect(() => {
 
-        if (mapRef?.current) {
+        if (selectedYear !== '') {
 
-            view.set('container', mapRef?.current);
+            if (mapRef?.current) {
 
-            fullscreen.set('element', appRef?.current);
-            view.ui.add(fullscreen, "top-left");
+                view.set('container', mapRef.current);
 
-            slider.set('container', sliderRef?.current);
-            view.ui.add(expandLegend, 'bottom-left');
+                fullscreen.set('element', appRef?.current);
+                view.ui.add(fullscreen, "top-left");
 
-            expandChart.set('content', document.getElementById(chartRef.current));
-            view.ui.add(expandChart, "top-right");
+                slider.set('container', sliderRef?.current);
+                view.ui.add(expandLegend, 'bottom-left');
 
-            view.ui.add(loadingRef.current, "top-right");
+                expandChart.set('content', document.getElementById(chartRef.current));
+                view.ui.add(expandChart, "top-right");
 
-            return () => { mapRef.current = null; view; fullscreen; appRef.current = null; loadingRef.current = null; };
+                expandFrequencyChart.set('content', document.getElementById(frequencyChartRef.current));
+                view.ui.add(expandFrequencyChart, "top-right");
+
+                view.ui.add(loadingRef.current, "top-right");
+
+                return () => { mapRef.current = null; view; fullscreen; appRef.current = null; loadingRef.current = null; chartRef.current = null; };
+            }
         }
 
-    }, []);
+    }, [selectedYear]);
 
     return (
         <>
             <SliderContainer sliderRef={sliderRef} />
             <MapView appRef={appRef} mapRef={mapRef} />
             <Chart id={chartRef.current} />
+            <FrequencyChart id={frequencyChartRef.current} />
             <Spinner loadingRef={loadingRef} />
         </>
     )

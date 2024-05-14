@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import createActiveTab from '../../zustand/createActiveTab';
 import expandChart from '../widget/ExpandChart';
+import expandFrequencyChart from '../widget/ExpandFrequencyChart';
 
 // eslint-disable-next-line react/prop-types
 const TabContainer = ({ items }) => {
@@ -9,7 +10,8 @@ const TabContainer = ({ items }) => {
 
     useEffect(() => {
 
-        activeTab === 3 ? expandChart.visible = false : expandChart.visible = true;
+        activeTab === 1 ? expandChart.visible = true : expandChart.visible = false;
+        activeTab === 3 ? expandFrequencyChart.visible = true : expandFrequencyChart.visible = false;
 
         const localActiveTab = localStorage.getItem('activeTab');
         if (localActiveTab !== null) {

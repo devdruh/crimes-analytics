@@ -130,3 +130,77 @@ export const convertTo12Hour = (label) => {
         return `${label - 12} PM`;
 }
 
+export const formatFrequencyChartData = (data) => {
+
+    const result = [];
+
+    for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        let formattedData = [];
+        if (element.data.length > 0) {
+            const items = element.data;
+            const maxValue = getMaxValue(items);
+            const minValue = getMinValue(items);
+
+            for (let index = 0; index < items.length; index++) {
+                const elementItems = items[index];
+
+                if (maxValue.value === elementItems.value) {
+                    formattedData.push(
+                        {
+                            y: elementItems.value,
+                            marker: {
+                                // symbol: iconArrowUpSVGBase64,
+                                width: 32,
+                                height: 32,
+                                symbol: 'triangle',
+                                fillColor: '#FF0000',
+                            },
+                            accessibility: {
+                                description: 'This is the highest point in the chart.'
+                            }
+                        }
+                    );
+                    continue;
+                }
+
+                if (minValue.value === elementItems.value) {
+                    formattedData.push(
+                        {
+                            y: elementItems.value,
+                            marker: {
+                                // symbol: iconArrowDownSVGBase64,
+                                width: 32,
+                                height: 32,
+                                symbol: 'triangle',
+                                fillColor: '#FF0000',
+                            },
+                            accessibility: {
+                                description: 'This is the lowest point in the chart.'
+                            }
+                        }
+                    );
+                    continue;
+                }
+
+                formattedData.push(elementItems.value);
+
+            }
+        }
+
+        result.push({
+            name: element.name,
+            // marker: {
+            //     symbol: index === 0 ? 'square' : 'diamond'
+            // },
+
+            color: index === 0 ? '#0ca5b0' : '#ffc941',
+            visible: index === 0 ? true : false,
+            dashStyle: 'shortdot',
+            data: formattedData
+        });
+
+    }
+
+    return result;
+}
