@@ -80,6 +80,16 @@ const chartOptions = {
         },
         gridLineColor: 'var(--fallback-bc,oklch(var(--bc)/0.3))'
     },
+    loading: {
+        labelStyle: {
+            color: 'var(--fallback-bc,oklch(var(--p)))', // Text color of the loading message
+            fontWeight: 'bold', // Font weight of the loading message
+            fontSize: '20px' // Size of the loading message
+        },
+        style: {
+            backgroundColor: 'var(--fallback-b3,oklch(var(--b3)))' // Background color of the loading screen
+        },
+    },
     // plotOptions: {
     //     spline: {
     //         marker: {
