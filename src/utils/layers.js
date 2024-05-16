@@ -35,13 +35,13 @@ export const layerStatsQuery = async (where, groupStats) => {
 
 export const queryMonthsStats = async (where) => {
 
-    const response = await layerStatsQuery(where, ['REPORT_MONTH']);
+    const response = await layerStatsQuery(where, ['OCC_MONTH']);
     const data = [];
 
     for (let index = 0; index < response.features.length; index++) {
         const element = response.features[index];
         data.push({
-            label: element.attributes.REPORT_MONTH,
+            label: element.attributes.OCC_MONTH,
             value: element.attributes.count
         });
     }
@@ -62,13 +62,13 @@ export const queryMonthsStats = async (where) => {
 
 export const queryWeeksStats = async (where) => {
 
-    const response = await layerStatsQuery(where, ['REPORT_DOW']);
+    const response = await layerStatsQuery(where, ['OCC_DOW']);
     const data = [];
 
     for (let index = 0; index < response.features.length; index++) {
         const element = response.features[index];
         data.push({
-            label: element.attributes.REPORT_DOW.replace(/\s/g, ''),
+            label: element.attributes.OCC_DOW.replace(/\s/g, ''),
             value: element.attributes.count
         });
     }
@@ -79,13 +79,13 @@ export const queryWeeksStats = async (where) => {
 
 export const queryDaysStats = async (where) => {
 
-    const response = await layerStatsQuery(where, ['REPORT_DAY']);
+    const response = await layerStatsQuery(where, ['OCC_DAY']);
     const data = [];
 
     for (let index = 0; index < response.features.length; index++) {
         const element = response.features[index];
         data.push({
-            label: element.attributes.REPORT_DAY,
+            label: element.attributes.OCC_DAY,
             value: element.attributes.count
         });
     }
@@ -96,20 +96,41 @@ export const queryDaysStats = async (where) => {
 
 export const queryHoursStats = async (where) => {
 
-    const response = await layerStatsQuery(where, ['REPORT_HOUR']);
+    const response = await layerStatsQuery(where, ['OCC_HOUR']);
     const data = [];
 
     for (let index = 0; index < response.features.length; index++) {
         const element = response.features[index];
         data.push({
-            text: convertTo12Hour(element.attributes.REPORT_HOUR),
-            label: element.attributes.REPORT_HOUR,
+            text: convertTo12Hour(element.attributes.OCC_HOUR),
+            label: element.attributes.OCC_HOUR,
             value: element.attributes.count
         });
     }
 
     return data;
 
+}
+
+export const queryDrillDownMonthData = async (event) => {
+    const where = `OCC_YEAR = '${event.point.id.substring(event.point.id.length - 4)}' AND OCC_MONTH = '${event.point.name}'`;
+    const response = await queryDaysStats(where);
+
+    return response;
+}
+
+export const queryDrillDownWeekData = async (event) => {
+    const where = `OCC_YEAR = '${event.point.id.substring(event.point.id.length - 4)}' AND OCC_DOW = '${event.point.name}'`;
+    const response = await queryHoursStats(where);
+
+    return response;
+}
+
+export const queryDrillDownDayData = async (event) => {
+    const where = `OCC_YEAR = '${event.point.id.substring(event.point.id.length - 4)}' AND OCC_DAY = '${event.point.name}'`;
+    const response = await queryHoursStats(where);
+
+    return response;
 }
 
 export const layerMCIRenderer = (value, selectedDay, selectedMonth) => {

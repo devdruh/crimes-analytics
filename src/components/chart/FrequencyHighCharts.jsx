@@ -1,181 +1,414 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import Highcharts, { color } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting';
+import HighchartsDrilldown from 'highcharts/modules/drilldown';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
-import { useEffect, useState } from 'react';
-import { formatFrequencyChartData } from '../../utils/formatters';
+import { useEffect, useRef, useState } from 'react';
+import { formatDrilldownData, formatDrilldownHoursData, formatFrequencyChartData } from '../../utils/formatters';
 import createSelectedFrequency from '../../zustand/createSelectedFrequency';
-import { DAYS_OF_THE_WEEK_SHORT, MONTHS_OF_THE_YEAR_SHORT } from '../../utils/constants';
+import { queryDrillDownDayData, queryDrillDownMonthData, queryDrillDownWeekData } from '../../utils/layers';
 
 if (typeof Highcharts === 'object') {
-    HighchartsExporting(Highcharts)
+    HighchartsExporting(Highcharts);
+    HighchartsDrilldown(Highcharts);
 }
 
-const FrequencyHighCharts = ({ items }) => {
+const chartOptions = {
+    chart: {
+        type: 'column',
+        // type: 'spline',
+        backgroundColor: 'var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)))',
+        events: {
+            render: function () {
+                var chart = this;
 
-    const chartOptions = {
-        chart: {
-            type: 'spline',
-            backgroundColor: 'var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)))',
-        },
-        title: {
-            text: '',
-            style: {
-                color: 'var(--fallback-bc,oklch(var(--bc)/0.9))'
+                var visibleSeries = chart.series
+                    .filter(series => series.visible)
+                    .map(series => series.userOptions.id);
+
+                var title;
+                if (visibleSeries.length > 1) {
+                    title = visibleSeries.join(', ');
+                } else {
+                    if (visibleSeries[0]) {
+                        title = visibleSeries[0].substring(0, visibleSeries[0].length - 4) + ' ' + visibleSeries[0].substring(visibleSeries[0].length - 4);
+                    }
+                }
+
+                if (visibleSeries.length > 0) {
+                    chart.setTitle(null, { text: 'Date: ' + title }, false);
+                } else {
+                    chart.setTitle(null, { text: null }, false);
+                }
             }
+        }
+    },
+    title: {
+        text: '',
+        style: {
+            color: 'var(--fallback-bc,oklch(var(--bc)/0.9))'
+        }
+    },
+    subtitle: {
+        text: '',
+        style: {
+            color: 'var(--fallback-bc,oklch(var(--bc)/0.6))'
+        }
+    },
+    xAxis: {
+        type: 'category',
+        // accessibility: {
+        //     description: 'Months of the year'
+        // },
+        labels: {
+            style: {
+                color: 'var(--fallback-bc,oklch(var(--bc)/0.6))'
+            },
+        }
+    },
+    yAxis: {
+        title: {
+            text: ''
         },
-        subtitle: {
-            text: '',
+        labels: {
+            format: '{value}',
             style: {
                 color: 'var(--fallback-bc,oklch(var(--bc)/0.6))'
             }
         },
-        xAxis: {
-            categories: [],
-            accessibility: {
-                description: 'Months of the year'
-            },
-            labels: {
-                style: {
-                    color: 'var(--fallback-bc,oklch(var(--bc)/0.6))'
-                }
-            }
+        gridLineColor: 'var(--fallback-bc,oklch(var(--bc)/0.3))'
+    },
+    // plotOptions: {
+    //     spline: {
+    //         marker: {
+    //             radius: 4,
+    //             // lineColor: '#fff',
+    //             lineWidth: 1
+    //         },
+    //     },
+    // },
+    series: [],
+    drilldown: {
+        activeAxisLabelStyle: {
+            textDecoration: 'none',
+            color: 'var(--fallback-bc,oklch(var(--bc)))',
         },
-        yAxis: {
-            title: {
-                text: ''
-            },
-            labels: {
-                format: '{value}',
-                style: {
-                    color: 'var(--fallback-bc,oklch(var(--bc)/0.6))'
-                }
-            },
-            gridLineColor: 'var(--fallback-bc,oklch(var(--bc)/0.3))'
+        activeDataLabelStyle: {
+            textDecoration: 'none',
+            color: 'var(--fallback-bc,oklch(var(--bc)))',
         },
-        tooltip: {
-            crosshairs: true,
-            shared: true,
-            backgroundColor: 'var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)))',
-            style: {
-                color: 'var(--fallback-bc,oklch(var(--bc)))'
-            },
-            format: '<span style="font-size: 1em">Day {key}</span><br/>' +
-                '{#each points}' +
-                '<span style="color:{color}">\u25CF</span> ' +
-                '{series.name}: <b>{y}</b><br/>' +
-                '{/each}',
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    // lineColor: '#fff',
-                    lineWidth: 1
-                },
-            }
-        },
-        legend: {
-            symbolWidth: 30,
-            itemStyle: {
-                color: 'var(--fallback-bc,oklch(var(--bc)/0.8))',
-
-            },
-            itemHoverStyle: {
-                color: 'var(--fallback-bc,oklch(var(--bc)))',
+        breadcrumbs: {
+            position: {
+                align: 'right'
             }
         },
         series: [],
-        navigation: {
-            buttonOptions: {
-                theme: {
-                    fill: 'transparent',
-                    states: {
-                        hover: {
-                            fill: 'transparent',
-                        },
-                        select: {
-                            fill: 'var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)))'
-                        }
+    },
+    tooltip: {
+        crosshairs: true,
+        shared: true,
+        backgroundColor: 'var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)))',
+        style: {
+            color: 'var(--fallback-bc,oklch(var(--bc)))'
+        },
+        format: '<span style="font-size: 1em"> {key}</span><br/>' +
+            '{#each points}' +
+            '<span style="color:{color}">\u25CF</span> ' +
+            '{series.name}: <b>{y}</b><br/>' +
+            '{/each}',
+    },
+    legend: {
+        symbolWidth: 30,
+        itemStyle: {
+            color: 'var(--fallback-bc,oklch(var(--bc)/0.8))',
+
+        },
+        itemHoverStyle: {
+            color: 'var(--fallback-bc,oklch(var(--bc)))',
+        }
+    },
+    navigation: {
+        buttonOptions: {
+            theme: {
+                fill: 'transparent',
+                states: {
+                    hover: {
+                        fill: 'transparent',
+                    },
+                    select: {
+                        fill: 'var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)))'
                     }
-                },
-                symbolStroke: 'var(--fallback-bc,oklch(var(--bc)/0.8))'
+                }
             },
-            menuStyle: {
-                background: 'var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)))',
-                boxShadow: 'none',
-                border: '1px solid var(--fallback-bc,oklch(var(--bc)/0.1))'
-
-            },
-            menuItemStyle: {
-                // borderLeft: '2px solid #2caffe',
-                // borderRadius: 0,
-                color: 'var(--fallback-bc,oklch(var(--bc)))',
-            },
-            menuItemHoverStyle: {
-                background: 'var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)))',
-            }
+            symbolStroke: 'var(--fallback-bc,oklch(var(--bc)/0.8))'
         },
-        credits: {
-            enabled: false
-        },
-    };
+        menuStyle: {
+            background: 'var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)))',
+            boxShadow: 'none',
+            border: '1px solid var(--fallback-bc,oklch(var(--bc)/0.1))'
 
-    const [options, setOptions] = useState(chartOptions);
+        },
+        menuItemStyle: {
+            // borderLeft: '2px solid #2caffe',
+            // borderRadius: 0,
+            color: 'var(--fallback-bc,oklch(var(--bc)))',
+        },
+        menuItemHoverStyle: {
+            background: 'var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)))',
+        }
+    },
+    credits: {
+        enabled: false
+    },
+};
+
+const FrequencyHighCharts = ({ items }) => {
+
     const { selectedYear } = createLeftSideFilter();
     const { selectedFrequency } = createSelectedFrequency();
+    const [options, setOptions] = useState(chartOptions);
+    const chartRef = useRef(null);
 
     useEffect(() => {
 
+        if (chartRef.current) {
+            setOptions((data) => ({
+                ...data,
+                drilldown: {
+                    ...data.drilldown,
+                    series: []
+                },
+                series: [],
+            }));
+            chartRef.current.chart.drilldown.drillUp();
+        }
+
         const frequencyHighLow = formatFrequencyChartData(items);
-        setOptions((data) => ({
-            ...data,
-            series: frequencyHighLow
-        }));
 
         if (selectedFrequency === 1) {
-            const DAYS_OF_THE_MONTH = [...Array(31).keys().map((i) => i + 1)];
+
+            const chartTitle = 'Crimes occurred by Day';
             setOptions((data) => ({
                 ...data,
                 title: {
-                    text: 'Reported Crimes by Day'
+                    text: chartTitle
                 },
                 subtitle: {
                     text: 'Date: ' + selectedYear
                 },
                 xAxis: {
-                    categories: DAYS_OF_THE_MONTH
-                }
+                    ...data.xAxis,
+                    labels: {
+                        ...data.xAxis.labels,
+                        formatter: function () {
+                            return this.value;
+                        }
+                    }
+                },
+                series: frequencyHighLow,
+                chart: {
+                    ...data.chart,
+                    events: {
+                        ...data.chart.events,
+                        drilldown: async function (event) {
+                            if (!event.seriesOptions) {
+                                const chart = this;
+
+                                try {
+
+                                    chart.showLoading('Loading ...');
+
+                                    // Fetch drilldown data
+                                    const drilldownSeriesData = await queryDrillDownDayData(event);
+                                    const drillDownData = formatDrilldownHoursData(drilldownSeriesData);
+
+                                    // Prepare new drilldown series
+                                    const series = {
+                                        name: event.point.name,
+                                        id: event.point.drilldown,
+                                        data: drillDownData
+                                    };
+
+                                    // Add new series as drilldown after a delay
+                                    const timeId = setTimeout(() => {
+                                        chart.setTitle({ text: 'Crimes occurred by hours on day ' + event.point.name });
+                                        chart.addSeriesAsDrilldown(event.point, series);
+                                    }, 1000);
+
+                                    return () => { clearTimeout(timeId); };
+
+                                } catch (error) {
+                                    console.log(error);
+                                } finally {
+                                    setTimeout(() => {
+                                        chart.hideLoading();
+                                    }, 1000);
+                                }
+                            }
+                        },
+                        drillup: function () {
+                            const chart = this;
+                            chart.setTitle({ text: chartTitle });
+                        }
+                    }
+                },
             }));
 
         } else if (selectedFrequency === 2) {
+
+            const chartTitle = 'Crimes occurred by day of week';
             setOptions((data) => ({
                 ...data,
                 title: {
-                    text: 'Reported Crimes by Day of week'
+                    text: chartTitle
                 },
                 subtitle: {
                     text: 'Date: ' + selectedYear
                 },
                 xAxis: {
-                    categories: DAYS_OF_THE_WEEK_SHORT
+                    ...data.xAxis,
+                    labels: {
+                        ...data.xAxis.labels,
+                        formatter: function () {
+                            return this.value.substring(0, 3);
+                        }
+                    }
+                },
+                series: frequencyHighLow,
+                chart: {
+                    ...data.chart,
+                    events: {
+                        ...data.chart.events,
+                        drilldown: async function (event) {
+                            if (!event.seriesOptions) {
+                                const chart = this;
+
+                                try {
+
+                                    chart.showLoading('Loading ...');
+
+                                    // Fetch drilldown data
+                                    const drilldownSeriesData = await queryDrillDownWeekData(event);
+                                    const drillDownData = formatDrilldownHoursData(drilldownSeriesData);
+
+                                    // Prepare new drilldown series
+                                    const series = {
+                                        name: event.point.name,
+                                        id: event.point.drilldown,
+                                        data: drillDownData
+                                    };
+
+                                    // Add new series as drilldown after a delay
+                                    const timeId = setTimeout(() => {
+                                        chart.update({
+                                            xAxis: {
+                                                labels: {
+                                                    formatter: function () {
+                                                        return this.value;
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        chart.setTitle({ text: 'Crimes occurred by hours on ' + event.point.name });
+                                        chart.addSeriesAsDrilldown(event.point, series);
+                                    }, 1000);
+
+                                    return () => { clearTimeout(timeId); };
+
+                                } catch (error) {
+                                    console.log(error);
+                                } finally {
+                                    setTimeout(() => {
+                                        chart.hideLoading();
+                                    }, 1000);
+                                }
+                            }
+                        },
+                        drillup: function () {
+                            const chart = this;
+                            chart.setTitle({ text: chartTitle });
+                            chart.update({
+                                xAxis: {
+                                    labels: {
+                                        formatter: function () {
+                                            return this.value.substring(0, 3);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
                 }
             }));
 
-
         } else if (selectedFrequency === 3) {
+
+            const chartTitle = 'Crimes occurred by Month';
             setOptions((data) => ({
                 ...data,
                 title: {
-                    text: 'Reported Crimes by Month'
+                    text: chartTitle
                 },
                 subtitle: {
                     text: 'Date: ' + selectedYear
                 },
                 xAxis: {
-                    categories: MONTHS_OF_THE_YEAR_SHORT
+                    ...data.xAxis,
+                    labels: {
+                        ...data.xAxis.labels,
+                        formatter: function () {
+                            return this.value.substring(0, 3);
+                        }
+                    }
+                },
+                series: frequencyHighLow,
+                chart: {
+                    ...data.chart,
+                    events: {
+                        ...data.chart.events,
+                        drilldown: async function (event) {
+                            if (!event.seriesOptions) {
+                                const chart = this;
+
+                                try {
+
+                                    chart.showLoading('Loading ...');
+
+                                    // Fetch drilldown data
+                                    const drilldownSeriesData = await queryDrillDownMonthData(event);
+                                    const drillDownData = formatDrilldownData(drilldownSeriesData);
+
+                                    // Prepare new drilldown series
+                                    const series = {
+                                        name: event.point.name,
+                                        id: event.point.drilldown,
+                                        data: drillDownData
+                                    };
+
+                                    // Add new series as drilldown after a delay
+                                    const timeId = setTimeout(() => {
+                                        chart.setTitle({ text: 'Crimes occurred by days in ' + event.point.name });
+                                        chart.addSeriesAsDrilldown(event.point, series);
+                                    }, 1000);
+
+                                    return () => { clearTimeout(timeId); };
+
+                                } catch (error) {
+                                    console.log(error);
+                                } finally {
+                                    setTimeout(() => {
+                                        chart.hideLoading();
+                                    }, 1000);
+                                }
+                            }
+                        },
+                        drillup: function () {
+                            const chart = this;
+                            chart.setTitle({ text: chartTitle });
+                        }
+                    }
                 }
             }));
         }
@@ -186,6 +419,7 @@ const FrequencyHighCharts = ({ items }) => {
         <HighchartsReact
             highcharts={Highcharts}
             options={options}
+            ref={chartRef}
         />
     )
 }

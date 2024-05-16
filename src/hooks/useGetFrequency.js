@@ -8,10 +8,12 @@ const useGetFrequency = () => {
     const [data, setData] = useState([]);
     const { selectedYear } = createLeftSideFilter();
     const { selectedFrequency } = createSelectedFrequency();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
         const fetchData = async () => {
+            setLoading(true);
             let prevYear = selectedYear - 1;
             let whereCurr = `OCC_YEAR = '${selectedYear}'`;
             let wherePrev = `OCC_YEAR = '${selectedYear - 1}'`;
@@ -24,7 +26,6 @@ const useGetFrequency = () => {
             } else if (selectedFrequency === 2) {
                 responseCurr = await queryWeeksStats(whereCurr);
                 responsePrev = await queryWeeksStats(wherePrev);
-
             } else if (selectedFrequency === 3) {
                 responseCurr = await queryMonthsStats(whereCurr);
                 responsePrev = await queryMonthsStats(wherePrev);
@@ -37,17 +38,19 @@ const useGetFrequency = () => {
                     name: selectedYear,
                     data: responseCurr,
                 }]);
+                setLoading(false);
             } else {
                 setData([{
-                    name: selectedYear,
+                    name: selectedYear.toString(),
                     data: responseCurr,
                 }, {
                     name: prevYear.toString(),
                     data: responsePrev,
                 }]);
+                setLoading(false);
             }
 
-            return () => { setData([]); };
+            return () => { setData([]); setLoading(false); };
 
         }
 
@@ -57,7 +60,7 @@ const useGetFrequency = () => {
 
     }, [selectedFrequency, selectedYear]);
 
-    return { data }
+    return { data, loading }
 }
 
 export default useGetFrequency
