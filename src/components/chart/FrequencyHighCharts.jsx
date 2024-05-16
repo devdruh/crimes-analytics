@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import Highcharts from 'highcharts';
+import Highcharts, { color, theme } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsDrilldown from 'highcharts/modules/drilldown';
@@ -102,7 +102,18 @@ const chartOptions = {
         breadcrumbs: {
             position: {
                 align: 'right'
-            }
+            },
+            buttonTheme: {
+                style: {
+                    color: 'var(--fallback-bc,oklch(var(--bc)))',
+                },
+                states: {
+                    hover: {
+                        fill: 'transparent',
+                    },
+                }
+            },
+
         },
         series: [],
     },
