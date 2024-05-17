@@ -50,50 +50,58 @@ const useSliderInit = () => {
 
             const tooltip = createTooltip();
 
-            const hitTest = promiseUtils.debounce((event) => {
-                return view.hitTest(event)
-                    .then((hit) => {
-                        const results = hit.results.filter((result) => {
-                            return result.graphic.layer === layerMajorCrimeIndicators;
-                        });
+            const hitTest = promiseUtils.debounce(async (e) => {
+                const hit = await view.hitTest(e);
+                const results = hit.results.filter((result) => {
+                    return result.graphic.layer === layerMajorCrimeIndicators;
+                });
 
-                        if (!results.length) {
-                            return null;
-                        }
-
-                        return {
-                            graphic: results[0].graphic,
-                            screenPoint: hit.screenPoint
-                        };
-                    });
+                if (!results.length) {
+                    return null;
+                }
+                return {
+                    graphic: results[0].graphic,
+                    screenPoint: hit.screenPoint
+                };
             });
 
-            view.on("pointer-move", (event) => {
-                return hitTest(event)
-                    .then((hit) => {
-                        // remove current highlighted feature
-                        if (highlight) {
-                            highlight.remove();
-                            highlight = null;
-                        }
+            const pointerMoveEvent = (event) => {
 
-                        // highlight the hovered feature
-                        // or hide the tooltip
-                        if (hit) {
-                            const graphic = hit.graphic;
-                            const screenPoint = hit.screenPoint;
+                const storeTab = localStorage.getItem('activeTab');
+                if (storeTab && storeTab === '1') {
+                    return hitTest(event)
+                        .then((hit) => {
 
-                            highlight = layerview.highlight(graphic);
+                            // remove current highlighted feature
+                            if (highlight) {
+                                highlight.remove();
+                                highlight = null;
+                            }
 
-                            const today = new Date();
-                            today.setHours(graphic.getAttribute("OCC_HOUR"), 0, 0, 0);
+                            // highlight the hovered feature
+                            // or hide the tooltip
+                            if (hit) {
+                                const graphic = hit.graphic;
+                                const screenPoint = hit.screenPoint;
 
-                            tooltip.show(screenPoint, selectedMonth !== '' && selectedDay === '' ? "Occurred in day " + graphic.getAttribute("OCC_DAY") : "Occurred at " + formatHour12(today));
-                        } else {
-                            tooltip.hide();
-                        }
-                    }, () => { });
-            });
+                                highlight = layerview.highlight(graphic);
+
+                                const today = new Date();
+                                today.setHours(graphic.getAttribute("OCC_HOUR"), 0, 0, 0);
+
+                                tooltip.show(screenPoint, selectedMonth !== '' && selectedDay === '' ? "Occurred in day " + graphic.getAttribute("OCC_DAY") : "Occurred at " + formatHour12(today));
+                            } else {
+                                tooltip.hide();
+                            }
+                        }, () => { });
+                }
+
+                return;
+
+            }
+
+            view.on("pointer-move", pointerMoveEvent);
+
         }
 
         function createTooltip() {
