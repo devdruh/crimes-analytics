@@ -5,23 +5,25 @@ import createSliderWidget from "../../zustand/createSliderWidget";
 import { layerMCIRenderer, layerMajorCrimeIndicators } from "../../utils/layers";
 import { formatHour12 } from "../../utils/formatters";
 import slider from "../widget/Slider";
+import createActiveTab from "../../zustand/createActiveTab";
 
 const PlayPause = () => {
 
-    const { setSliderValue } = createSliderWidget();
+    const { setSliderValue, isPlaying, setIsPlaying } = createSliderWidget();
     const { selectedMonth, selectedDay } = createLeftSideFilter(useShallow((state) => ({
         selectedMonth: state.selectedMonth,
         selectedDay: state.selectedDay,
     })));
 
-    const [isPlaying, setIsPlaying] = useState(false);
     const [playValue, setPlayValue] = useState(0);
     let layerSymbol = useRef(null);
+
+    const { activeTab } = createActiveTab();
 
     useEffect(() => {
 
         let timeoutId;
-        const initLayerRenderer = layerMajorCrimeIndicators.renderer; 
+        const initLayerRenderer = layerMajorCrimeIndicators.renderer;
 
         const updateSliderValue = (value) => {
             slider.viewModel.setValue(0, value);
@@ -61,11 +63,17 @@ const PlayPause = () => {
             }
         }
 
+        // Change the layer renderer to default renderer when playing and change tab
+        if (activeTab === 3 && layerSymbol.current) {
+            setIsPlaying(false);
+            layerMajorCrimeIndicators.renderer = layerSymbol.current;
+        }
+
         return () => {
             clearTimeout(timeoutId);
         };
 
-    }, [isPlaying, selectedDay, selectedMonth, setSliderValue, playValue]);
+    }, [isPlaying, selectedDay, selectedMonth, setSliderValue, playValue, activeTab, setIsPlaying]);
 
     return {
         handleStartAnimation: () => {

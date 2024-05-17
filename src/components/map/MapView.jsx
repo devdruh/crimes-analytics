@@ -9,7 +9,7 @@ const MapView = ({ appRef, mapRef }) => {
 
     return (
         <div id="app-map-container" className="app-map-container" ref={appRef}>
-            <div className={`${month !== undefined ? 'map-container-slider' : `${activeTab === 3 ? 'map-container-frequency ease-out' : 'map-container ease-out'}`}`}>
+            <div className={`${month !== undefined && activeTab === 1 ? 'map-container-slider' : `${activeTab === 3 ? 'map-container-frequency ease-out' : 'map-container ease-out'}`}`}>
                 <div id="viewDiv" ref={mapRef}></div>
             </div>
         </div>

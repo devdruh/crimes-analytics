@@ -1,17 +1,16 @@
-import { useState } from "react";
 import createSliderWidget from "../../zustand/createSliderWidget";
 import useSliderInit from "../../hooks/useSliderInit";
 import createLeftSideFilter from "../../zustand/createLeftSideFilter";
 import PlayPause from "./PlayPause";
+import createActiveTab from "../../zustand/createActiveTab";
 
 // eslint-disable-next-line react/prop-types
 const SliderContainer = ({ sliderRef }) => {
 
-    const { sliderValue } = createSliderWidget();
+    const { sliderValue, isPlaying, setIsPlaying } = createSliderWidget();
     const { selectedMonth } = createLeftSideFilter();
-    const [isPlaying, setIsPlaying] = useState(false)
+    const { activeTab } = createActiveTab();
 
-    // const { createRendererLayerMCI } = useSliderInit();
     useSliderInit();
 
     const { handleStartAnimation, handleStopAnimation } = PlayPause();
@@ -25,7 +24,7 @@ const SliderContainer = ({ sliderRef }) => {
     }
 
     return (
-        <div className={`${selectedMonth !== '' ? 'visible ease-in duration-700 transition -translate-y-3/4' : 'invisible absolute'}`}>
+        <div className={`${selectedMonth !== '' && activeTab === 1 ? 'visible ease-in duration-700 transition -translate-y-3/4' : 'invisible absolute'}`}>
             <div id="sliderContainer" className="esri-widget flex flex-row translate-y-3/4" >
                 <span id="sliderValue" className="text-nowrap flex justify-center flex-col text-center text-xl">{sliderValue}</span>
                 <div id="sliderInnerContainer" className="flex flex-col justify-center">
