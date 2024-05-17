@@ -24,7 +24,7 @@ const StatsPanel = ({ data, featureCount }) => {
                                     <p className='truncate'> {Math.abs(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2).replace(/\.0+$/, '')}%
                                         {
                                             Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2) > 0 ? ' more than ' :
-                                                Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2) === 0 ? ' ... ' : ' less than '
+                                                Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2) === '0.00' ? ' same as ' : ' less than '
                                         }
                                         {
                                             selectedDay !== '' ? 'yesterday' : selectedMonth !== '' ? 'last month' : 'last year'
