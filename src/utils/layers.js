@@ -6,7 +6,7 @@ export const layerMajorCrimeIndicators = new FeatureLayer({
     id: 'major-crime-indicators',
     url: API_MCI_ENDPOINT,
     outFields: "*",
-    effect: "bloom(2 0 0.5)"
+    effect: "bloom(2 0 0.5)",
 });
 
 export const layerMajorCrimeYTD = new FeatureLayer({
@@ -238,3 +238,62 @@ export const queryByFreq = (params) => {
     layerMajorCrimeIndicators.definitionExpression = sqlQuery;
 
 }
+
+export const layerPopupTemplate = {
+    // autocasts as new PopupTemplate()
+    title: "Crime Category - {MCI_CATEGORY}",
+    content: [
+        {
+            type: "fields",
+            fieldInfos: [
+                {
+                    fieldName: "expression/format-occurred-date",
+                },
+                {
+                    fieldName: "expression/format-reported-date",
+                },
+                {
+                    fieldName: "OFFENCE",
+                    label: "Offence"
+                },
+                {
+                    fieldName: "PREMISES_TYPE",
+                    label: "Premises Type"
+                },
+                {
+                    fieldName: "DIVISION",
+                    label: "Division"
+                },
+                {
+                    fieldName: "NEIGHBOURHOOD_140",
+                    label: "NEIGHBOURHOOD_140"
+                },
+                {
+                    fieldName: "NEIGHBOURHOOD_158",
+                    label: "NEIGHBOURHOOD_158"
+                },
+                {
+                    fieldName: "LOCATION_TYPE",
+                    label: "Location Type"
+                }
+            ],
+        },
+        {
+            type: "text",
+            text: "NOTE: Due to the offset of occurrence location, the numbers by Division and Neighbourhood may not reflect the exact count of occurrences reported within these geographies. Therefore, the Toronto Police Service does not guarantee the accuracy, completeness, timeliness of the data and it should not be compared to any other source of crime data. <br/><br/><a href='https://www.tps.ca/' rel='noreferrer noopener' target='_blank'>Source: TPS</a>"
+        }
+    ],
+    expressionInfos: [
+        {
+            expression: `Text(DateOnly($feature.OCC_DATE), 'ddd, MMM D, Y') + ' @ ' + Text(Time($feature.OCC_HOUR,00,00), 'h:mm A')`,
+            name: "format-occurred-date",
+            title: "Occurred Date and Time",
+        },
+        {
+            expression: `Text(DateOnly($feature.REPORT_DATE), 'ddd, MMM D, Y') + ' @ ' + Text(Time($feature.REPORT_HOUR,00,00), 'h:mm A')`,
+            name: "format-reported-date",
+            title: "Reported Date and Time"
+        }
+    ],
+    lastEditInfoEnabled: true,
+};
