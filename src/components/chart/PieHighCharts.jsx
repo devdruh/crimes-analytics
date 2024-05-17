@@ -3,7 +3,9 @@ import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import useThemeSelector from '../../zustand/useThemeSelector';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { queryByTab } from '../../utils/layers';
+import createActiveTab from '../../zustand/createActiveTab';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
@@ -179,21 +181,37 @@ const PieHighCharts = ({ items }) => {
 
     const [options, setOptions] = useState(pieOptions);
     const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter();
+    const chartRef = useRef(null);
+    const { activeTab } = createActiveTab();
 
     useEffect(() => {
 
         const colorGreen = ['#1c6e67', '#26938a', '#2fb8ac', '#59c6bd', '#82d4cd', '#ace3de', '#d5f1ee'];
         const colorYellow = ['#664b07', '#99710a', '#cc960e', '#ffbc11', '#ffc941', '#ffd770', '#ffe4a0'];
 
-        setOptions((data) => ({
-            ...data,
-            series: [
-                {
-                    ...data.series[0],
-                    data: items,
-                }
-            ]
-        }));
+
+        if (chartRef.current !== null) {
+            setOptions((data) => ({
+                ...data,
+                series: [
+                    {
+                        ...data.series[0],
+                        data: items,
+                    }
+                ]
+            }));
+
+            // update layer query on change of tab
+            if (activeTab === 1) {
+                const params = {
+                    year: selectedYear,
+                    month: selectedMonth,
+                    day: selectedDay,
+                    tab: 1,
+                };
+                queryByTab(params);
+            }
+        }
 
         if (selectedMonth === '') {
             setOptions((data) => ({
@@ -246,12 +264,13 @@ const PieHighCharts = ({ items }) => {
             }));
         }
 
-    }, [selectedYear, selectedMonth, selectedDay, items, isDark]);
+    }, [selectedYear, selectedMonth, selectedDay, items, isDark, activeTab]);
 
     return (
         <HighchartsReact
             highcharts={Highcharts}
             options={options}
+            ref={chartRef}
         />
     )
 }

@@ -199,3 +199,42 @@ export const layerMCIRenderer = (value, selectedDay, selectedMonth) => {
         ]
     };
 }
+
+export const queryByTab = (params) => {
+
+    let sqlQuery;
+
+    if (params.tab === 1) {
+        sqlQuery = `OCC_YEAR='${params.year}'`;
+        params.month !== '' ? sqlQuery += ` AND OCC_MONTH = '${params.month}'` : '';
+        params.day !== '' ? sqlQuery += ` AND OCC_DAY = '${params.day}'` : '';
+
+    } else if (params.tab === 2) {
+        sqlQuery = `OCC_YEAR = '${params.year}'`
+    } else if (params.tab === 3) {
+        sqlQuery = `OCC_YEAR = '${params.year}'`
+    }
+
+    layerMajorCrimeIndicators.definitionExpression = sqlQuery;
+
+}
+
+export const queryByFreq = (params) => {
+
+    let sqlQuery;
+
+    if (!params.isUndefined) {
+        if (params.frequency === 1) {
+            sqlQuery = `OCC_YEAR = '${params.year}' AND OCC_DAY = '${params.name}'`;
+        } else if (params.frequency === 2) {
+            sqlQuery = `OCC_YEAR = '${params.year}' AND OCC_DOW = '${params.name}'`;
+        } else if (params.frequency === 3) {
+            sqlQuery = `OCC_YEAR = '${params.year}' AND OCC_MONTH = '${params.name}'`;
+        }
+    } else {
+        sqlQuery = `OCC_YEAR = '${params.year}'`;
+    }
+
+    layerMajorCrimeIndicators.definitionExpression = sqlQuery;
+
+}

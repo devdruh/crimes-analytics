@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import Highcharts, { color, theme } from 'highcharts';
+import { useEffect, useRef, useState } from 'react';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsDrilldown from 'highcharts/modules/drilldown';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
-import { useEffect, useRef, useState } from 'react';
-import { formatDrilldownData, formatDrilldownHoursData, formatFrequencyChartData } from '../../utils/formatters';
 import createSelectedFrequency from '../../zustand/createSelectedFrequency';
-import { queryDrillDownDayData, queryDrillDownMonthData, queryDrillDownWeekData } from '../../utils/layers';
+import createActiveTab from '../../zustand/createActiveTab';
+import { formatDrilldownData, formatDrilldownHoursData, formatFrequencyChartData } from '../../utils/formatters';
+import { queryByFreq, queryByTab, queryDrillDownDayData, queryDrillDownMonthData, queryDrillDownWeekData } from '../../utils/layers';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -183,6 +184,9 @@ const chartOptions = {
     credits: {
         enabled: false
     },
+    accessibility: {
+        enabled: false,
+    },
 };
 
 const FrequencyHighCharts = ({ items }) => {
@@ -191,6 +195,7 @@ const FrequencyHighCharts = ({ items }) => {
     const { selectedFrequency } = createSelectedFrequency();
     const [options, setOptions] = useState(chartOptions);
     const chartRef = useRef(null);
+    const { activeTab } = createActiveTab();
 
     useEffect(() => {
 
@@ -203,6 +208,16 @@ const FrequencyHighCharts = ({ items }) => {
                 },
                 series: [],
             }));
+
+            // update layer query on change of tab
+            if (activeTab === 3) {
+                let params = {
+                    year: selectedYear,
+                    tab: 3,
+                };
+                queryByTab(params);
+            }
+
             chartRef.current.chart.drilldown.drillUp();
         }
 
@@ -235,6 +250,16 @@ const FrequencyHighCharts = ({ items }) => {
                         ...data.chart.events,
                         drilldown: async function (event) {
                             if (!event.seriesOptions) {
+
+                                // update layer based on selected series
+                                const params = {
+                                    name: event.point.name,
+                                    year: event.point.drilldown.substring(event.point.drilldown.length - 4),
+                                    frequency: selectedFrequency,
+                                    isUndefined: false,
+                                };
+                                queryByFreq(params);
+
                                 const chart = this;
 
                                 try {
@@ -272,6 +297,10 @@ const FrequencyHighCharts = ({ items }) => {
                         drillup: function () {
                             const chart = this;
                             chart.setTitle({ text: chartTitle });
+
+                            // update layer based on selected year
+                            const params = { isUndefined: true, year: selectedYear };
+                            queryByFreq(params);
                         }
                     }
                 },
@@ -304,6 +333,16 @@ const FrequencyHighCharts = ({ items }) => {
                         ...data.chart.events,
                         drilldown: async function (event) {
                             if (!event.seriesOptions) {
+
+                                // update layer based on selected series
+                                const params = {
+                                    name: event.point.name,
+                                    year: event.point.drilldown.substring(event.point.drilldown.length - 4),
+                                    frequency: selectedFrequency,
+                                    isUndefined: false,
+                                };
+                                queryByFreq(params);
+
                                 const chart = this;
 
                                 try {
@@ -359,9 +398,13 @@ const FrequencyHighCharts = ({ items }) => {
                                     }
                                 }
                             });
+
+                            // update layer based on selected year
+                            const params = { isUndefined: true, year: selectedYear };
+                            queryByFreq(params);
                         }
                     }
-                }
+                },
             }));
 
         } else if (selectedFrequency === 3) {
@@ -391,6 +434,16 @@ const FrequencyHighCharts = ({ items }) => {
                         ...data.chart.events,
                         drilldown: async function (event) {
                             if (!event.seriesOptions) {
+
+                                // update layer based on selected series
+                                const params = {
+                                    name: event.point.name,
+                                    year: event.point.drilldown.substring(event.point.drilldown.length - 4),
+                                    frequency: selectedFrequency,
+                                    isUndefined: false,
+                                };
+                                queryByFreq(params);
+
                                 const chart = this;
 
                                 try {
@@ -428,13 +481,17 @@ const FrequencyHighCharts = ({ items }) => {
                         drillup: function () {
                             const chart = this;
                             chart.setTitle({ text: chartTitle });
+
+                            // update layer based on selected year
+                            const params = { isUndefined: true, year: selectedYear };
+                            queryByFreq(params);
                         }
                     }
                 }
             }));
         }
 
-    }, [items, selectedFrequency, selectedYear]);
+    }, [items, selectedFrequency, selectedYear, activeTab]);
 
     return (
         <HighchartsReact
