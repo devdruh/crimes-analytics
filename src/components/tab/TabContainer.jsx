@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import createActiveTab from '../../zustand/createActiveTab';
 import expandChart from '../widget/ExpandChart';
 import expandFrequencyChart from '../widget/ExpandFrequencyChart';
+import { viewClosePopup } from '../../utils/views';
 
 // eslint-disable-next-line react/prop-types
 const TabContainer = ({ items }) => {
@@ -17,6 +18,9 @@ const TabContainer = ({ items }) => {
         if (localActiveTab !== null) {
             setActiveTab(parseInt(localActiveTab));
         }
+
+        // close popup on change tab
+        viewClosePopup();
 
     }, [setActiveTab, activeTab]);
 
