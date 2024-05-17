@@ -8,6 +8,7 @@ import HighchartsDrilldown from 'highcharts/modules/drilldown';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import createSelectedFrequency from '../../zustand/createSelectedFrequency';
 import createActiveTab from '../../zustand/createActiveTab';
+import { viewClosePopup } from '../../utils/views';
 import { formatDrilldownData, formatDrilldownHoursData, formatFrequencyChartData } from '../../utils/formatters';
 import { queryByFreq, queryByTab, queryDrillDownDayData, queryDrillDownMonthData, queryDrillDownWeekData } from '../../utils/layers';
 
@@ -218,6 +219,7 @@ const FrequencyHighCharts = ({ items }) => {
                 queryByTab(params);
             }
 
+            // drill up chart
             chartRef.current.chart.drilldown.drillUp();
         }
 
@@ -250,6 +252,9 @@ const FrequencyHighCharts = ({ items }) => {
                         ...data.chart.events,
                         drilldown: async function (event) {
                             if (!event.seriesOptions) {
+
+                                // close popup on change tab
+                                viewClosePopup();
 
                                 // update layer based on selected series
                                 const params = {
@@ -298,6 +303,9 @@ const FrequencyHighCharts = ({ items }) => {
                             const chart = this;
                             chart.setTitle({ text: chartTitle });
 
+                            // close popup on change tab
+                            viewClosePopup();
+
                             // update layer based on selected year
                             const params = { isUndefined: true, year: selectedYear };
                             queryByFreq(params);
@@ -333,6 +341,9 @@ const FrequencyHighCharts = ({ items }) => {
                         ...data.chart.events,
                         drilldown: async function (event) {
                             if (!event.seriesOptions) {
+
+                                // close popup on change tab
+                                viewClosePopup();
 
                                 // update layer based on selected series
                                 const params = {
@@ -399,6 +410,9 @@ const FrequencyHighCharts = ({ items }) => {
                                 }
                             });
 
+                            // close popup on change tab
+                            viewClosePopup();
+
                             // update layer based on selected year
                             const params = { isUndefined: true, year: selectedYear };
                             queryByFreq(params);
@@ -434,6 +448,9 @@ const FrequencyHighCharts = ({ items }) => {
                         ...data.chart.events,
                         drilldown: async function (event) {
                             if (!event.seriesOptions) {
+
+                                // close popup on change tab
+                                viewClosePopup();
 
                                 // update layer based on selected series
                                 const params = {
@@ -481,6 +498,9 @@ const FrequencyHighCharts = ({ items }) => {
                         drillup: function () {
                             const chart = this;
                             chart.setTitle({ text: chartTitle });
+
+                            // close popup on change tab
+                            viewClosePopup();
 
                             // update layer based on selected year
                             const params = { isUndefined: true, year: selectedYear };
