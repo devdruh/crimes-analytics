@@ -3,11 +3,15 @@ import createActiveTab from '../../zustand/createActiveTab';
 import expandChart from '../widget/ExpandChart';
 import expandFrequencyChart from '../widget/ExpandFrequencyChart';
 import { viewClosePopup } from '../../utils/views';
+import { queryByTab } from '../../utils/layers';
+import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 
 // eslint-disable-next-line react/prop-types
 const TabContainer = ({ items }) => {
 
     const { activeTab, setActiveTab } = createActiveTab();
+    const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter();
+
 
     useEffect(() => {
 
@@ -19,10 +23,29 @@ const TabContainer = ({ items }) => {
             setActiveTab(parseInt(localActiveTab));
         }
 
+        // update layer query on change of tab
+        if (activeTab === 1 && selectedYear !== '') {
+            const params = {
+                year: selectedYear,
+                month: selectedMonth,
+                day: selectedDay,
+                tab: 1,
+            };
+            queryByTab(params);
+        }
+
+        if (activeTab === 3 && selectedYear !== '') {
+            let params = {
+                year: selectedYear,
+                tab: 3,
+            };
+            queryByTab(params);
+        }
+
         // close popup on change tab
         viewClosePopup();
 
-    }, [setActiveTab, activeTab]);
+    }, [setActiveTab, activeTab, selectedYear, selectedMonth, selectedDay]);
 
     return (
         <div role="tablist" className="tabs tabs-lifted tabs-lg mt-2">

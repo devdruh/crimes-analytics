@@ -10,7 +10,7 @@ import createSelectedFrequency from '../../zustand/createSelectedFrequency';
 import createActiveTab from '../../zustand/createActiveTab';
 import { viewClosePopup } from '../../utils/views';
 import { formatDrilldownData, formatDrilldownHoursData, formatFrequencyChartData } from '../../utils/formatters';
-import { queryByFreq, queryByTab, queryDrillDownDayData, queryDrillDownMonthData, queryDrillDownWeekData } from '../../utils/layers';
+import { queryByFreq, queryDrillDownDayData, queryDrillDownMonthData, queryDrillDownWeekData } from '../../utils/layers';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -196,7 +196,6 @@ const FrequencyHighCharts = ({ items }) => {
     const { selectedFrequency } = createSelectedFrequency();
     const [options, setOptions] = useState(chartOptions);
     const chartRef = useRef(null);
-    const { activeTab } = createActiveTab();
 
     useEffect(() => {
 
@@ -209,15 +208,6 @@ const FrequencyHighCharts = ({ items }) => {
                 },
                 series: [],
             }));
-
-            // update layer query on change of tab
-            if (activeTab === 3) {
-                let params = {
-                    year: selectedYear,
-                    tab: 3,
-                };
-                queryByTab(params);
-            }
 
             // drill up chart
             chartRef.current.chart.drilldown.drillUp();
@@ -511,7 +501,7 @@ const FrequencyHighCharts = ({ items }) => {
             }));
         }
 
-    }, [items, selectedFrequency, selectedYear, activeTab]);
+    }, [items, selectedFrequency, selectedYear]);
 
     return (
         <HighchartsReact

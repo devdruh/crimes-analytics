@@ -4,8 +4,6 @@ import HighchartsExporting from 'highcharts/modules/exporting';
 import useThemeSelector from '../../zustand/useThemeSelector';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import { useEffect, useRef, useState } from 'react';
-import { queryByTab } from '../../utils/layers';
-import createActiveTab from '../../zustand/createActiveTab';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
@@ -182,7 +180,6 @@ const PieHighCharts = ({ items }) => {
     const [options, setOptions] = useState(pieOptions);
     const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter();
     const chartRef = useRef(null);
-    const { activeTab } = createActiveTab();
 
     useEffect(() => {
 
@@ -200,17 +197,6 @@ const PieHighCharts = ({ items }) => {
                     }
                 ]
             }));
-
-            // update layer query on change of tab
-            if (activeTab === 1) {
-                const params = {
-                    year: selectedYear,
-                    month: selectedMonth,
-                    day: selectedDay,
-                    tab: 1,
-                };
-                queryByTab(params);
-            }
         }
 
         if (selectedMonth === '') {
@@ -264,7 +250,7 @@ const PieHighCharts = ({ items }) => {
             }));
         }
 
-    }, [selectedYear, selectedMonth, selectedDay, items, isDark, activeTab]);
+    }, [selectedYear, selectedMonth, selectedDay, items, isDark]);
 
     return (
         <HighchartsReact
