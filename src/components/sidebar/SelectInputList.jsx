@@ -7,7 +7,7 @@ import useThemeSelector from '../../zustand/useThemeSelector';
 
 const animatedComponents = makeAnimated();
 
-const SelectInputList = ({ options, labelText, onChange }) => {
+const SelectInputList = ({ options, labelText, onChange, selected }) => {
 
     const { isDark } = useThemeSelector();
 
@@ -112,6 +112,7 @@ const SelectInputList = ({ options, labelText, onChange }) => {
                 })}
                 closeMenuOnSelect={false}
                 isMulti
+                defaultValue={selected}
                 components={animatedComponents}
                 onChange={handleChange}
                 options={options}

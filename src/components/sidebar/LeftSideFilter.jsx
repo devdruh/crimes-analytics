@@ -21,6 +21,7 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
         selectedYear,
         selectedMonth,
         selectedDay,
+        selectedCategories,
         setSelectedYear,
         setSelectedMonth,
         setSelectedDay,
@@ -181,7 +182,7 @@ const LeftSideFilter = ({ urlYear, urlMonth, urlDay }) => {
                         {
                             !isLoading && categoryOption && categoryOption.length > 0 && (
                                 <div className="w-full">
-                                    <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} />
+                                    <SelectInputList options={categoryOption} onChange={handleChangeCategory} labelText={'Category'} selected={selectedCategories} />
                                 </div>
                             )
                         }

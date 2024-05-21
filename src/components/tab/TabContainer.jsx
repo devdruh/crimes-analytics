@@ -10,7 +10,7 @@ import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 const TabContainer = ({ items }) => {
 
     const { activeTab, setActiveTab } = createActiveTab();
-    const { selectedYear, selectedMonth, selectedDay } = createLeftSideFilter();
+    const { selectedYear, selectedMonth, selectedDay, selectedCategories } = createLeftSideFilter();
 
 
     useEffect(() => {
@@ -29,6 +29,7 @@ const TabContainer = ({ items }) => {
                 year: selectedYear,
                 month: selectedMonth,
                 day: selectedDay,
+                categories: selectedCategories,
                 tab: 1,
             };
             queryByTab(params);
@@ -45,7 +46,7 @@ const TabContainer = ({ items }) => {
         // close popup on change tab
         viewClosePopup();
 
-    }, [setActiveTab, activeTab, selectedYear, selectedMonth, selectedDay]);
+    }, [setActiveTab, activeTab, selectedYear, selectedMonth, selectedDay, selectedCategories]);
 
     return (
         <div role="tablist" className="tabs tabs-lifted tabs-lg mt-2">

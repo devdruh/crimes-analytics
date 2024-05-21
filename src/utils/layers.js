@@ -1,6 +1,6 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { API_MCI_ENDPOINT, API_YTD_CRIME_WM, MONTHS_OF_THE_YEAR } from './constants';
-import { convertTo12Hour, formatDaysOrder, formatHour12, formatMonthToNumber } from './formatters';
+import { convertTo12Hour, formatCategoryQuery, formatDaysOrder, formatHour12, formatMonthToNumber } from './formatters';
 
 export const layerMajorCrimeIndicators = new FeatureLayer({
     id: 'major-crime-indicators',
@@ -208,6 +208,11 @@ export const queryByTab = (params) => {
         sqlQuery = `OCC_YEAR='${params.year}'`;
         params.month !== '' ? sqlQuery += ` AND OCC_MONTH = '${params.month}'` : '';
         params.day !== '' ? sqlQuery += ` AND OCC_DAY = '${params.day}'` : '';
+
+        if (params.categories.length > 0) {
+            const formattedCategory = formatCategoryQuery(params.categories);
+            sqlQuery += formattedCategory;
+        }
 
     } else if (params.tab === 2) {
         sqlQuery = `OCC_YEAR = '${params.year}'`
