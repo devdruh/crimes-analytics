@@ -280,6 +280,20 @@ export const iconArrowUpSVGBase64 = 'url(data:image/svg+xml;base64,PD94bWwgdmVyc
 
 export const iconArrowDownSVGBase64 = 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPg0KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0xMiA1VjE5TTEyIDE5TDYgMTNNMTIgMTlMMTggMTMiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4NCjwvc3ZnPg==)';
 
+export const iconMathEqual =
+    <svg
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        viewBox="0 0 24 24"
+        className="w-8 h-8"
+    >
+        <path stroke="none" d="M0 0h24v24H0z" />
+        <path d="M5 9h14M5 15h14" />
+    </svg>;
+
 export const iconSortUp =
     <svg
         fill="currentColor"
@@ -287,7 +301,7 @@ export const iconSortUp =
         className="w-8 h-8"
     >
         <path d="M3.5 12.5a.5.5 0 01-1 0V3.707L1.354 4.854a.5.5 0 11-.708-.708l2-1.999.007-.007a.498.498 0 01.7.006l2 2a.5.5 0 11-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7a.5.5 0 01-.5-.5zM7.5 6a.5.5 0 000 1h5a.5.5 0 000-1h-5zm0 3a.5.5 0 000 1h3a.5.5 0 000-1h-3zm0 3a.5.5 0 000 1h1a.5.5 0 000-1h-1z" />
-    </svg>
+    </svg>;
 
 export const iconSortDown =
     <svg
@@ -296,7 +310,7 @@ export const iconSortDown =
         className="w-8 h-8"
     >
         <path d="M3.5 2.5a.5.5 0 00-1 0v8.793l-1.146-1.147a.5.5 0 00-.708.708l2 1.999.007.007a.497.497 0 00.7-.006l2-2a.5.5 0 00-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7a.5.5 0 01-.5-.5zM7.5 6a.5.5 0 000 1h5a.5.5 0 000-1h-5zm0 3a.5.5 0 000 1h3a.5.5 0 000-1h-3zm0 3a.5.5 0 000 1h1a.5.5 0 000-1h-1z" />
-    </svg>
+    </svg>;
 
 export const getIconSort = (value) => {
     if (value === 0) {

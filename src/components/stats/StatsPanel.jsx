@@ -1,4 +1,4 @@
-import getRandomStatsIcon from '../../utils/getRandomStatsIcon'
+import { iconBxLineChart, iconBxLineChartDown, iconMathEqual } from '../../utils/icons';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 
 // eslint-disable-next-line react/prop-types
@@ -14,7 +14,10 @@ const StatsPanel = ({ data, featureCount }) => {
 
                     <div className="stat" key={i + 1}>
                         <div className="stat-figure text-primary">
-                            {getRandomStatsIcon()}
+                            {
+                                Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2) > 0 ? iconBxLineChart :
+                                    Math.sign(((item.count - item.prevCount) / (item.prevCount)) * 100).toFixed(2) === '0.00' ? iconMathEqual : iconBxLineChartDown
+                            }
                         </div>
                         <div className="stat-title text-base-content">{item.value}</div>
                         <div className="stat-value max-sm:font-medium max-md:text-xl text-primary">{item.count}</div>
