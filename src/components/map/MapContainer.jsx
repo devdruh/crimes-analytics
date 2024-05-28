@@ -12,6 +12,7 @@ import Spinner from "../widget/Spinner";
 import FrequencyChart from "../widget/FrequencyChart";
 import expandFrequencyChart from "../widget/ExpandFrequencyChart";
 import createLeftSideFilter from "../../zustand/createLeftSideFilter";
+import createActiveTab from "../../zustand/createActiveTab";
 
 const MapContainer = () => {
 
@@ -23,12 +24,13 @@ const MapContainer = () => {
     const loadingRef = useRef(null);
 
     const { selectedYear } = createLeftSideFilter();
+    const { activeTab } = createActiveTab();
 
     useLayerInit();
 
     useEffect(() => {
 
-        if (selectedYear !== '') {
+        if (selectedYear !== '' && activeTab !== '') {
 
             if (mapRef?.current) {
 
@@ -52,9 +54,9 @@ const MapContainer = () => {
             }
         }
 
-    }, [selectedYear]);
+    }, [selectedYear, activeTab]);
 
-    return (
+    return activeTab !== '' && selectedYear !== '' &&
         <>
             <SliderContainer sliderRef={sliderRef} />
             <MapView appRef={appRef} mapRef={mapRef} />
@@ -62,7 +64,7 @@ const MapContainer = () => {
             <FrequencyChart id={frequencyChartRef.current} />
             <Spinner loadingRef={loadingRef} />
         </>
-    )
+
 }
 
 export default MapContainer

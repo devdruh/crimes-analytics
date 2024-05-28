@@ -73,6 +73,10 @@
     height: calc(100vh - 346px);
 }
 
+.map-container-neighbourhood {
+    height: calc(100vh - 458px);
+}
+
 .map-container-slider {
     height: calc(100vh - 249px);
 }
