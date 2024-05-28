@@ -218,6 +218,8 @@ export const queryByTab = (params) => {
         sqlQuery = `OCC_YEAR = '${params.year}'`
     } else if (params.tab === 3) {
         sqlQuery = `OCC_YEAR = '${params.year}'`
+    } else {
+        sqlQuery = `OCC_YEAR = '${params.year}'`
     }
 
     layerMajorCrimeIndicators.definitionExpression = sqlQuery;
@@ -302,3 +304,23 @@ export const layerPopupTemplate = {
     ],
     lastEditInfoEnabled: true,
 };
+
+export const queryNeighbourhoodStats = async (where) => {
+
+    let sqlQuery = `OCC_YEAR = '${where.year}'`;
+    where.category !== '' ? sqlQuery += ` AND MCI_CATEGORY = '${where.category}'` : '';
+
+    const response = await layerStatsQuery(sqlQuery, ['NEIGHBOURHOOD_158']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            label: element.attributes.NEIGHBOURHOOD_158,
+            value: element.attributes.count
+        });
+    }
+
+    return data;
+
+}

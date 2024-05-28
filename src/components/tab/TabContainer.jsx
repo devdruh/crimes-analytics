@@ -21,6 +21,8 @@ const TabContainer = ({ items }) => {
         const localActiveTab = localStorage.getItem('activeTab');
         if (localActiveTab !== null) {
             setActiveTab(parseInt(localActiveTab));
+        } else {
+            setActiveTab(1);
         }
 
         // update layer query on change of tab
@@ -39,6 +41,14 @@ const TabContainer = ({ items }) => {
             let params = {
                 year: selectedYear,
                 tab: 3,
+            };
+            queryByTab(params);
+        }
+
+        if (activeTab === 4 && selectedYear !== '') {
+            let params = {
+                year: selectedYear,
+                tab: 4,
             };
             queryByTab(params);
         }
