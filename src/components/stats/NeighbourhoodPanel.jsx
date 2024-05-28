@@ -23,7 +23,7 @@ const NeighbourhoodPanel = ({ data }) => {
                                                                     i === 9 ? 'max-lg:order-12' :
                                                                         ''}  }`} key={i + 1}>
                         <div className="stat-figure text-primary"> {getIconSort(item.icon)} </div>
-                        <div className="stat-title text-base-content"> {item.label} </div>
+                        <div className="stat-title text-base-content truncate" title={`${item.label}`}> {item.label} </div>
                         <div className="stat-value max-sm:font-medium max-md:text-xl text-primary"> {item.value} </div>
                         <div className="stat-desc truncate">
                             {
