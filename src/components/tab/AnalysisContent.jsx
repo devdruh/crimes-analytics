@@ -1,11 +1,9 @@
+import createActiveTab from '../../zustand/createActiveTab'
 import StatsContainer from '../stats/StatsContainer'
 
 const OverviewContent = () => {
-    return (
-        <>
-            <StatsContainer />
-        </>
-    )
+    const { activeTab } = createActiveTab();
+    return activeTab !== '' && activeTab === 1 && <StatsContainer />
 }
 
 export default OverviewContent
