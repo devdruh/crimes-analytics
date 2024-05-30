@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 const useStatsNeighbourhood = () => {
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const { selectedYear } = createLeftSideFilter();
 
