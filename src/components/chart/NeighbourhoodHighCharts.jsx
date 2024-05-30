@@ -107,7 +107,10 @@ const chartOptions = {
         bar: {
             // borderRadius: '50%',
             dataLabels: {
-                enabled: true
+                enabled: true,
+                style: {
+                    textOutline: 'none'
+                }
             },
             groupPadding: 0.1
         }
@@ -159,11 +162,12 @@ const chartOptions = {
     drilldown: {
         activeAxisLabelStyle: {
             textDecoration: 'none',
-            color: 'var(--fallback-bc,oklch(var(--bc)))',
+            fontWeight: 'normal',
+            color: 'var(--fallback-bc,oklch(var(--bc)/0.8))',
         },
         activeDataLabelStyle: {
             textDecoration: 'none',
-            color: 'var(--fallback-bc,oklch(var(--bc)))',
+            color: 'var(--fallback-bc,oklch(var(--bc)/0.8))',
         },
         breadcrumbs: {
             position: {
@@ -171,7 +175,7 @@ const chartOptions = {
             },
             buttonTheme: {
                 style: {
-                    color: 'var(--fallback-bc,oklch(var(--bc)))',
+                    color: 'var(--fallback-bc,oklch(var(--bc)/0.8))',
                 },
                 states: {
                     hover: {
@@ -179,6 +183,7 @@ const chartOptions = {
                     },
                 }
             },
+
         },
         series: [],
     },
@@ -205,15 +210,6 @@ const NeighbourhoodHighCharts = ({ items }) => {
             subtitle: {
                 ...data.subtitle,
                 text: 'Date: ' + selectedYear
-            },
-            xAxis: {
-                ...data.xAxis,
-                labels: {
-                    ...data.xAxis.labels,
-                    formatter: function () {
-                        return this.value;
-                    }
-                }
             },
             series: formattedSeries,
         }));
