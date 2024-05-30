@@ -3,7 +3,6 @@ import useStatsFrequency from '../../hooks/useStatsFrequency';
 import SkeletonFrequencyPanel from '../../skeleton/SkeletonFrequencyPanel';
 import FrequencyPanel from './FrequencyPanel'
 
-// eslint-disable-next-line react/prop-types
 const FrequencyContainer = () => {
 
     const { data, loading } = useStatsFrequency();
@@ -16,7 +15,7 @@ const FrequencyContainer = () => {
         }, 100);
         return () => clearTimeout(timeId);
 
-    }, [data, loading])
+    }, [loading]);
 
     return (
         <div className="shadow-md grid grid-cols-4 max-sm:grid-cols-2">

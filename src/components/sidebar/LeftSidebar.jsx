@@ -7,7 +7,7 @@ const LeftSidebar = () => {
 
     const { activeTab } = createActiveTab();
 
-    return (
+    return (activeTab !== '' &&
         <>
             <p className="font-semibold text-center pt-3">Filters</p>
             <div className="divider mt-0 mb-0" />

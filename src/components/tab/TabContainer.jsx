@@ -5,6 +5,7 @@ import expandFrequencyChart from '../widget/ExpandFrequencyChart';
 import { viewClosePopup } from '../../utils/views';
 import { queryByTab } from '../../utils/layers';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
+import expandNeighbourhoodChart from '../widget/ExpandNeighbourhoodChart';
 
 // eslint-disable-next-line react/prop-types
 const TabContainer = ({ items }) => {
@@ -12,11 +13,7 @@ const TabContainer = ({ items }) => {
     const { activeTab, setActiveTab } = createActiveTab();
     const { selectedYear, selectedMonth, selectedDay, selectedCategories } = createLeftSideFilter();
 
-
     useEffect(() => {
-
-        activeTab === 1 ? expandChart.visible = true : expandChart.visible = false;
-        activeTab === 3 ? expandFrequencyChart.visible = true : expandFrequencyChart.visible = false;
 
         const localActiveTab = localStorage.getItem('activeTab');
         if (localActiveTab !== null) {
@@ -24,6 +21,10 @@ const TabContainer = ({ items }) => {
         } else {
             setActiveTab(1);
         }
+
+        activeTab === 1 ? expandChart.visible = true : expandChart.visible = false;
+        activeTab === 3 ? expandFrequencyChart.visible = true : expandFrequencyChart.visible = false;
+        activeTab === 4 ? expandNeighbourhoodChart.visible = true : expandNeighbourhoodChart.visible = false;
 
         // update layer query on change of tab
         if (activeTab === 1 && selectedYear !== '') {
@@ -59,8 +60,8 @@ const TabContainer = ({ items }) => {
     }, [setActiveTab, activeTab, selectedYear, selectedMonth, selectedDay, selectedCategories]);
 
     return (
+        selectedYear !== '' && activeTab !== '' &&
         <div role="tablist" className="tabs tabs-lifted tabs-lg mt-2">
-
             {
                 // eslint-disable-next-line react/prop-types
                 items.map((tab) => (

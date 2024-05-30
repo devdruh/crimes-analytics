@@ -4,6 +4,7 @@ import createLeftSideFilter from '../zustand/createLeftSideFilter';
 import { useShallow } from 'zustand/react/shallow';
 import { layerMajorCrimeIndicators, layerPopupTemplate } from '../utils/layers';
 import { formatCategoryQuery } from '../utils/formatters';
+import createActiveTab from '../zustand/createActiveTab';
 
 const useLayerInit = () => {
 
@@ -19,6 +20,8 @@ const useLayerInit = () => {
         selectedCategories: state.selectedCategories,
     })));
 
+    const { activeTab } = createActiveTab(useShallow((state) => ({ activeTab: state.activeTab })));
+
     let sqlQuery = `OCC_YEAR='${selectedYear}'`;
     selectedMonth !== '' ? sqlQuery += ` AND OCC_MONTH = '${selectedMonth}'` : '';
     selectedDay !== '' ? sqlQuery += ` AND OCC_DAY = '${selectedDay}'` : '';
@@ -26,6 +29,10 @@ const useLayerInit = () => {
     if (selectedCategories.length > 0) {
         const formattedCategory = formatCategoryQuery(selectedCategories);
         sqlQuery += formattedCategory;
+    }
+
+    if (activeTab === 3 || activeTab === 4) {
+        sqlQuery = `OCC_YEAR='${selectedYear}'`;
     }
 
     useEffect(() => {
@@ -38,7 +45,6 @@ const useLayerInit = () => {
 
     }, [sqlQuery])
 
-    // return () => { layerMajorCrimeIndicators }
 }
 
 export default useLayerInit

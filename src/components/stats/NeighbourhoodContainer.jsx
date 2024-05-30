@@ -1,7 +1,7 @@
-import useStatsNeighbourhood from "../../hooks/useStatsNeighbourhood";
-import NeighbourhoodPanel from "./NeighbourhoodPanel";
-import SkeletonNeigbourhoodPanel from "../../skeleton/SkeletonNeigbourhoodPanel";
 import { useEffect, useState } from "react";
+import useStatsNeighbourhood from "../../hooks/useStatsNeighbourhood";
+import SkeletonNeigbourhoodPanel from "../../skeleton/SkeletonNeigbourhoodPanel";
+import NeighbourhoodPanel from "./NeighbourhoodPanel";
 
 const NeighbourhoodContainer = () => {
 
@@ -9,13 +9,14 @@ const NeighbourhoodContainer = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+
         const timeId = setTimeout(() => {
             setIsLoading(loading)
         }, 100);
 
         return () => clearTimeout(timeId);
 
-    }, [data, loading])
+    }, [loading]);
 
     return (
         <div className="shadow-md grid grid-cols-4 max-sm:grid-cols-2">

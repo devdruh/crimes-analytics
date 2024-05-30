@@ -5,6 +5,8 @@ import NeighbourhoodContent from "../../components/tab/NeighbourhoodContent"
 import FrequencyContent from "../../components/tab/FrequencyContent"
 import AnalysisContent from "../../components/tab/AnalysisContent"
 import TabContainer from "../../components/tab/TabContainer"
+import createLeftSideFilter from "../../zustand/createLeftSideFilter"
+import createActiveTab from "../../zustand/createActiveTab"
 
 const Home = () => {
     const tabItems = [
@@ -30,6 +32,9 @@ const Home = () => {
         }
     ];
 
+    const { selectedYear } = createLeftSideFilter();
+    const { activeTab } = createActiveTab();
+
     return (
         <div className="flex max-sm:flex-col gap-2">
             <div className="w-1/5 md:only:w-1/4 max-sm:w-full">
@@ -37,7 +42,9 @@ const Home = () => {
             </div>
             <div className="w-4/5 md:only:w-3/4 max-sm:w-full">
                 <TabContainer items={tabItems} />
-                <MapContainer />
+                {
+                    selectedYear !== '' && activeTab !== '' && <MapContainer />
+                }
             </div>
         </div>
     )
