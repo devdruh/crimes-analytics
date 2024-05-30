@@ -141,6 +141,11 @@
         color: var(--fallback-bc, oklch(var(--bc)/var(--tw-text-opacity)))
     }
 
+    .stat-desc {
+        --tw-text-opacity: 0.8;
+        color: var(--fallback-bc, oklch(var(--bc)/var(--tw-text-opacity)))
+    }
+
     [data-theme="dark"] .tab {
         /* @apply border-slate-300 */
         --tab-border-color: var(--fallback-a, oklch(var(--n)/var(--tw-border-opacity)));
