@@ -21,7 +21,7 @@ const SkeletonNeigbourhoodPanel = ({ data }) => {
 
             {
                 // eslint-disable-next-line react/prop-types
-                data.length === 0 && [...Array(9)].map((_, index) => (
+                data.length === 0 && [...Array(12)].map((_, index) => (
 
                     <div className="stat" key={index}>
                         <div className="stat-figure text-secondary">
