@@ -6,7 +6,9 @@ import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsDrilldown from 'highcharts/modules/drilldown';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
-import { formatNeighbourhoodChartData } from '../../utils/formatters';
+import { formatDrilldownData, formatNeighbourhoodChartData } from '../../utils/formatters';
+import { queryByTab, queryDrillDownNeighbourhoodData } from '../../utils/layers';
+import { viewClosePopup } from '../../utils/views';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -89,12 +91,15 @@ const chartOptions = {
     },
     loading: {
         labelStyle: {
-            color: 'var(--fallback-bc,oklch(var(--p)))', // Text color of the loading message
-            fontWeight: 'bold', // Font weight of the loading message
-            fontSize: '20px', // Size of the loading message
+            color: 'var(--fallback-bc,oklch(var(--p)))',
+            fontWeight: 'bold',
+            fontSize: '20px',
+            top: '5%',
+            align: 'center',
+            verticalAlign: 'top'
         },
         style: {
-            backgroundColor: 'var(--fallback-b3,oklch(var(--b3)))' // Background color of the loading screen
+            backgroundColor: 'var(--fallback-b3,oklch(var(--b3)))'
         },
     },
     tooltip: {
@@ -167,7 +172,7 @@ const chartOptions = {
         },
         activeDataLabelStyle: {
             textDecoration: 'none',
-            color: 'var(--fallback-bc,oklch(var(--bc)/0.8))',
+            color: 'var(--fallback-bc,oklch(var(--bc)))',
         },
         breadcrumbs: {
             position: {
@@ -175,7 +180,7 @@ const chartOptions = {
             },
             buttonTheme: {
                 style: {
-                    color: 'var(--fallback-bc,oklch(var(--bc)/0.8))',
+                    color: 'var(--fallback-bc,oklch(var(--bc)))',
                 },
                 states: {
                     hover: {
@@ -183,7 +188,7 @@ const chartOptions = {
                     },
                 }
             },
-
+            showFullPath: false
         },
         series: [],
     },
@@ -198,6 +203,20 @@ const NeighbourhoodHighCharts = ({ items }) => {
 
     useEffect(() => {
 
+        if (chartRef.current) {
+            setOptions((data) => ({
+                ...data,
+                drilldown: {
+                    ...data.drilldown,
+                    series: []
+                },
+                series: [],
+            }));
+
+            // drill up chart
+            chartRef.current.chart.drilldown.drillUp();
+        }
+
         const formattedSeries = formatNeighbourhoodChartData(items);
         const chartTitle = 'Crimes occurred by Neighbourhood';
 
@@ -211,7 +230,79 @@ const NeighbourhoodHighCharts = ({ items }) => {
                 ...data.subtitle,
                 text: 'Date: ' + selectedYear
             },
+            xAxis: {
+                ...data.xAxis,
+                labels: {
+                    ...data.xAxis.labels,
+                    formatter: function () {
+                        return this.value;
+                    }
+                }
+            },
             series: formattedSeries,
+            chart: {
+                ...data.chart,
+                events: {
+                    ...data.chart.events,
+                    drilldown: async function (event) {
+                        if (!event.seriesOptions) {
+
+                            // close popup on change tab
+                            viewClosePopup();
+
+                            const chart = this;
+
+                            try {
+
+                                chart.showLoading('Loading ...');
+
+                                // Fetch drilldown data
+                                const drilldownSeriesData = await queryDrillDownNeighbourhoodData(event);
+                                const drillDownData = formatDrilldownData(drilldownSeriesData);
+
+                                // Prepare new drilldown series
+                                const series = {
+                                    name: event.point.name,
+                                    id: event.point.drilldown,
+                                    data: drillDownData,
+                                    dataLabels: {
+                                        enabled: true,
+                                        color: 'var(--fallback-bc,oklch(var(--bc)))',
+                                    },
+                                };
+
+                                // Add new series as drilldown after a delay
+                                const timeId = setTimeout(() => {
+                                    chart.setTitle({ text: 'Crimes occurred by Premises' });
+                                    chart.setSize(null, 400, undefined);
+                                    chart.addSeriesAsDrilldown(event.point, series);
+                                }, 1000);
+
+                                return () => { clearTimeout(timeId); };
+
+                            } catch (error) {
+                                console.log(error);
+                            } finally {
+                                setTimeout(() => {
+                                    chart.hideLoading();
+                                }, 1000);
+                            }
+                        }
+                    },
+                    drillup: function () {
+                        const chart = this;
+                        chart.setTitle({ text: chartTitle });
+                        chart.setSize(null, 2500, undefined);
+
+                        // close popup on change tab
+                        viewClosePopup();
+
+                        // update layer based on selected year
+                        const params = { year: selectedYear };
+                        queryByTab(params);
+                    }
+                }
+            },
         }));
 
     }, [selectedYear, items]);
