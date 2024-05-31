@@ -38,7 +38,7 @@ const chartOptions = {
                     title = visibleSeries.join(', ');
                 } else {
                     if (visibleSeries[0]) {
-                        title = visibleSeries[0].substring(0, visibleSeries[0].length - 4) + ' ' + visibleSeries[0].substring(visibleSeries[0].length - 4);
+                        title = visibleSeries[0].substring(visibleSeries[0].length - 4);
                     }
                 }
 
