@@ -18,8 +18,8 @@ const Spinner = ({ loadingRef }) => {
 
                     const timeId = setTimeout(() => {
                         view.ui.remove(loadingRef.current);
-                    }, 500);
-                    return () => clearTimeout(timeId);
+                    }, 3000);
+                    return () => { clearTimeout(timeId); loadingRef.current = null; }
                 });
         }
 
@@ -30,8 +30,8 @@ const Spinner = ({ loadingRef }) => {
                 .then(() => {
                     const timeId = setTimeout(() => {
                         view.ui.remove(loadingRef.current);
-                    }, 500);
-                    return () => clearTimeout(timeId);
+                    }, 3000);
+                    return () => { clearTimeout(timeId); loadingRef.current = null; }
                 });
         }
 
