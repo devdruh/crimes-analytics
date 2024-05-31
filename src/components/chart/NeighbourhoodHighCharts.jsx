@@ -9,6 +9,7 @@ import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import { formatDrilldownData, formatNeighbourhoodChartData } from '../../utils/formatters';
 import { queryByNeighbourhood, queryDrillDownNeighbourhoodData } from '../../utils/layers';
 import { viewClosePopup } from '../../utils/views';
+import { CHART_NOTE_CAPTION } from '../../utils/constants';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -53,14 +54,19 @@ const chartOptions = {
     title: {
         text: '',
         style: {
-            color: 'var(--fallback-bc,oklch(var(--bc)/0.9))'
+            color: 'var(--fallback-bc,oklch(var(--bc)/0.8))'
         }
     },
     subtitle: {
         text: '',
         style: {
-            color: 'var(--fallback-bc,oklch(var(--bc)/0.6))'
-        }
+            color: 'var(--fallback-bc,oklch(var(--bc)/0.7))',
+            marginBottom: '20px',
+        },
+    },
+    caption: {
+        text: '',
+        verticalAlign: 'top'
     },
     xAxis: {
         type: 'category',
@@ -230,6 +236,10 @@ const NeighbourhoodHighCharts = ({ items }) => {
                 ...data.subtitle,
                 text: 'Date: ' + selectedYear
             },
+            caption: {
+                ...data.caption,
+                text: CHART_NOTE_CAPTION,
+            },
             xAxis: {
                 ...data.xAxis,
                 labels: {
@@ -282,6 +292,7 @@ const NeighbourhoodHighCharts = ({ items }) => {
                                 // Add new series as drilldown after a delay
                                 const timeId = setTimeout(() => {
                                     chart.setTitle({ text: 'Crimes occurred by Premises' });
+                                    chart.setCaption({ text: '' });
                                     chart.setSize(null, 400, undefined);
                                     chart.addSeriesAsDrilldown(event.point, series);
                                 }, 1000);
@@ -300,6 +311,7 @@ const NeighbourhoodHighCharts = ({ items }) => {
                     drillup: function () {
                         const chart = this;
                         chart.setTitle({ text: chartTitle });
+                        chart.setCaption({ text: CHART_NOTE_CAPTION });
                         chart.setSize(null, 2500, undefined);
 
                         // close popup on change tab

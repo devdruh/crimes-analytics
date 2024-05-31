@@ -11,6 +11,7 @@ import createActiveTab from '../../zustand/createActiveTab';
 import { viewClosePopup } from '../../utils/views';
 import { formatDrilldownData, formatDrilldownHoursData, formatFrequencyChartData } from '../../utils/formatters';
 import { queryByFreq, queryDrillDownDayData, queryDrillDownMonthData, queryDrillDownWeekData } from '../../utils/layers';
+import { CHART_NOTE_CAPTION } from '../../utils/constants';
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts);
@@ -58,6 +59,9 @@ const chartOptions = {
         style: {
             color: 'var(--fallback-bc,oklch(var(--bc)/0.6))'
         }
+    },
+    caption: {
+        text: '',
     },
     xAxis: {
         type: 'category',
@@ -235,6 +239,10 @@ const FrequencyHighCharts = ({ items }) => {
                         }
                     }
                 },
+                caption: {
+                    ...data.caption,
+                    text: CHART_NOTE_CAPTION,
+                },
                 series: frequencyHighLow,
                 chart: {
                     ...data.chart,
@@ -275,6 +283,7 @@ const FrequencyHighCharts = ({ items }) => {
                                     // Add new series as drilldown after a delay
                                     const timeId = setTimeout(() => {
                                         chart.setTitle({ text: 'Crimes occurred by hours on day ' + event.point.name });
+                                        chart.setCaption({ text: '' });
                                         chart.addSeriesAsDrilldown(event.point, series);
                                     }, 1000);
 
@@ -292,6 +301,7 @@ const FrequencyHighCharts = ({ items }) => {
                         drillup: function () {
                             const chart = this;
                             chart.setTitle({ text: chartTitle });
+                            chart.setCaption({ text: CHART_NOTE_CAPTION });
 
                             // close popup on change tab
                             viewClosePopup();
@@ -314,6 +324,10 @@ const FrequencyHighCharts = ({ items }) => {
                 },
                 subtitle: {
                     text: 'Date: ' + selectedYear
+                },
+                caption: {
+                    ...data.caption,
+                    text: CHART_NOTE_CAPTION,
                 },
                 xAxis: {
                     ...data.xAxis,
@@ -373,6 +387,7 @@ const FrequencyHighCharts = ({ items }) => {
                                             }
                                         });
                                         chart.setTitle({ text: 'Crimes occurred by hours on ' + event.point.name });
+                                        chart.setCaption({ text: '' });
                                         chart.addSeriesAsDrilldown(event.point, series);
                                     }, 1000);
 
@@ -390,6 +405,7 @@ const FrequencyHighCharts = ({ items }) => {
                         drillup: function () {
                             const chart = this;
                             chart.setTitle({ text: chartTitle });
+                            chart.setCaption({ text: CHART_NOTE_CAPTION });
                             chart.update({
                                 xAxis: {
                                     labels: {
@@ -421,6 +437,10 @@ const FrequencyHighCharts = ({ items }) => {
                 },
                 subtitle: {
                     text: 'Date: ' + selectedYear
+                },
+                caption: {
+                    ...data.caption,
+                    text: CHART_NOTE_CAPTION,
                 },
                 xAxis: {
                     ...data.xAxis,
@@ -471,6 +491,7 @@ const FrequencyHighCharts = ({ items }) => {
                                     // Add new series as drilldown after a delay
                                     const timeId = setTimeout(() => {
                                         chart.setTitle({ text: 'Crimes occurred by days in ' + event.point.name });
+                                        chart.setCaption({ text: '' });
                                         chart.addSeriesAsDrilldown(event.point, series);
                                     }, 1000);
 
@@ -488,6 +509,7 @@ const FrequencyHighCharts = ({ items }) => {
                         drillup: function () {
                             const chart = this;
                             chart.setTitle({ text: chartTitle });
+                            chart.setCaption({ text: CHART_NOTE_CAPTION });
 
                             // close popup on change tab
                             viewClosePopup();

@@ -15,3 +15,5 @@ export const DAYS_OF_THE_WEEK_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri",
 export const API_YTD_CRIME_WM = 'https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/YTD_CRIME_WM/FeatureServer/0';
 
 export const DEFAULT_LAYER_EXTENT = { center: [-79.34, 43.70], zoom: 10 };
+
+export const CHART_NOTE_CAPTION = '💡 Note: Click on the graph bars to highlight the data in the map';
