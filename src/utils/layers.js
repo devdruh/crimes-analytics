@@ -218,6 +218,8 @@ export const queryByTab = (params) => {
         sqlQuery = `OCC_YEAR = '${params.year}'`
     } else if (params.tab === 3) {
         sqlQuery = `OCC_YEAR = '${params.year}'`
+    } else if (params.tab === 4) {
+        sqlQuery = `OCC_YEAR = '${params.year}'`
     } else {
         sqlQuery = `OCC_YEAR = '${params.year}'`
     }
@@ -317,6 +319,31 @@ export const queryNeighbourhoodStats = async (where) => {
         const element = response.features[index];
         data.push({
             label: element.attributes.NEIGHBOURHOOD_158,
+            value: element.attributes.count
+        });
+    }
+
+    return data;
+
+}
+
+export const queryDrillDownNeighbourhoodData = async (event) => {
+
+    const where = `OCC_YEAR = '${event.point.id.substring(event.point.id.length - 4)}' AND NEIGHBOURHOOD_158 = '${event.point.name}'`;
+    const response = await queryNeighbourhoodPremises(where);
+
+    return response;
+}
+
+export const queryNeighbourhoodPremises = async (where) => {
+
+    const response = await layerStatsQuery(where, ['PREMISES_TYPE']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            label: element.attributes.PREMISES_TYPE,
             value: element.attributes.count
         });
     }
