@@ -125,7 +125,7 @@ const chartOptions = {
                     },
                 }
             },
-
+            showFullPath: false
         },
         series: [],
     },
