@@ -7,7 +7,7 @@ import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsDrilldown from 'highcharts/modules/drilldown';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import { formatDrilldownData, formatNeighbourhoodChartData } from '../../utils/formatters';
-import { queryByTab, queryDrillDownNeighbourhoodData } from '../../utils/layers';
+import { queryByNeighbourhood, queryDrillDownNeighbourhoodData } from '../../utils/layers';
 import { viewClosePopup } from '../../utils/views';
 
 if (typeof Highcharts === 'object') {
@@ -250,6 +250,14 @@ const NeighbourhoodHighCharts = ({ items }) => {
                             // close popup on change tab
                             viewClosePopup();
 
+                            // update layer based on selected series
+                            const params = {
+                                name: event.point.name,
+                                year: event.point.drilldown.substring(event.point.drilldown.length - 4),
+                                isUndefined: false,
+                            };
+                            queryByNeighbourhood(params);
+
                             const chart = this;
 
                             try {
@@ -298,8 +306,8 @@ const NeighbourhoodHighCharts = ({ items }) => {
                         viewClosePopup();
 
                         // update layer based on selected year
-                        const params = { year: selectedYear };
-                        queryByTab(params);
+                        const params = { isUndefined: true, year: selectedYear };
+                        queryByNeighbourhood(params);
                     }
                 }
             },

@@ -22,6 +22,16 @@ export const viewWhenLayerView = (layer, callback) => {
     return;
 }
 
+export const viewGoToExtent = (extent) => {
+
+    view.goTo(extent, { duration: 3000 })
+        .catch(function (error) {
+            if (error.name != "AbortError") {
+                console.error(error);
+            }
+        });
+}
+
 export const viewHitTestLayer = promiseUtils.debounce(async (layer, event) => {
 
     const hit = await view.hitTest(event);

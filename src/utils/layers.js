@@ -1,6 +1,8 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import { API_MCI_ENDPOINT, API_YTD_CRIME_WM, MONTHS_OF_THE_YEAR } from './constants';
+import { API_MCI_ENDPOINT, API_MCI_NEIGHBOURHOOD, API_YTD_CRIME_WM, DEFAULT_LAYER_EXTENT, MONTHS_OF_THE_YEAR } from './constants';
 import { convertTo12Hour, formatCategoryQuery, formatDaysOrder, formatHour12, formatMonthToNumber } from './formatters';
+import { viewGoToExtent, viewWhenLayerView } from './views';
+import { mapAddLayer, mapRemoveAllLayers, mapRemoveLayer } from './maps';
 
 export const layerMajorCrimeIndicators = new FeatureLayer({
     id: 'major-crime-indicators',
@@ -12,6 +14,12 @@ export const layerMajorCrimeIndicators = new FeatureLayer({
 export const layerMajorCrimeYTD = new FeatureLayer({
     id: 'major-crime-ytd',
     url: API_YTD_CRIME_WM,
+    outFields: "*",
+});
+
+export const layerNeighbourhood = new FeatureLayer({
+    id: 'neighbourhood_158',
+    url: API_MCI_NEIGHBOURHOOD,
     outFields: "*",
 });
 
@@ -218,6 +226,7 @@ export const queryByTab = (params) => {
         sqlQuery = `OCC_YEAR = '${params.year}'`
     } else if (params.tab === 3) {
         sqlQuery = `OCC_YEAR = '${params.year}'`
+        mapRemoveLayer(layerNeighbourhood);
     } else if (params.tab === 4) {
         sqlQuery = `OCC_YEAR = '${params.year}'`
     } else {
@@ -226,6 +235,10 @@ export const queryByTab = (params) => {
 
     layerMajorCrimeIndicators.definitionExpression = sqlQuery;
 
+    const layerCallback = () => {
+        viewGoToExtent(DEFAULT_LAYER_EXTENT);
+    };
+    viewWhenLayerView(layerMajorCrimeIndicators, layerCallback);
 }
 
 export const queryByFreq = (params) => {
@@ -349,5 +362,43 @@ export const queryNeighbourhoodPremises = async (where) => {
     }
 
     return data;
+
+}
+
+export const queryByNeighbourhood = (params) => {
+
+    let sqlQuery;
+
+    if (!params.isUndefined) {
+        sqlQuery = `OCC_YEAR = '${params.year}' AND NEIGHBOURHOOD_158 = '${params.name}'`;
+        mapRemoveAllLayers();
+        mapAddLayer(layerNeighbourhood);
+        mapAddLayer(layerMajorCrimeIndicators);
+        layerNeighbourhood.definitionExpression = `AREA_NAME = '${params.name}'`;
+        layerNeighbourhood.featureEffect = {
+            filter: {
+                where: `AREA_NAME = '${params.name}'`
+            },
+            includedEffect: "bloom(0.9 0.6pt 0)",
+            excludedEffect: "blur(2.25pt) opacity(0.5)"
+        };
+        const boundaryRenderer = {
+            type: "simple",
+            symbol: {
+                color: "#0ca5b0",
+                type: "simple-line",
+                style: "solid"
+            },
+        };
+        layerNeighbourhood.renderer = boundaryRenderer;
+        layerNeighbourhood.queryExtent().then(function (results) {
+            viewGoToExtent(results.extent);
+        });
+    } else {
+        sqlQuery = `OCC_YEAR = '${params.year}'`;
+        viewGoToExtent(DEFAULT_LAYER_EXTENT);
+        mapRemoveLayer(layerNeighbourhood);
+    }
+    layerMajorCrimeIndicators.definitionExpression = sqlQuery;
 
 }
