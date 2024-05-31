@@ -226,7 +226,6 @@ export const queryByTab = (params) => {
         sqlQuery = `OCC_YEAR = '${params.year}'`
     } else if (params.tab === 3) {
         sqlQuery = `OCC_YEAR = '${params.year}'`
-        mapRemoveLayer(layerNeighbourhood);
     } else if (params.tab === 4) {
         sqlQuery = `OCC_YEAR = '${params.year}'`
     } else {
@@ -235,6 +234,7 @@ export const queryByTab = (params) => {
 
     layerMajorCrimeIndicators.definitionExpression = sqlQuery;
 
+    mapRemoveLayer(layerNeighbourhood);
     const layerCallback = () => {
         viewGoToExtent(DEFAULT_LAYER_EXTENT);
     };
