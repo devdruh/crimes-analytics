@@ -23,7 +23,7 @@ const chartOptions = {
         spacingLeft: 20,
         scrollablePlotArea: {
             minWidth: 600, // Minimum width before scrolling is enabled
-            scrollPositionX: 1 // Initially scroll to the end of the chart
+            // scrollPositionX: 1 // Initially scroll to the end of the chart
         },
         backgroundColor: 'var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)))',
         events: {
@@ -181,9 +181,6 @@ const chartOptions = {
             color: 'var(--fallback-bc,oklch(var(--bc)))',
         },
         breadcrumbs: {
-            position: {
-                align: 'right'
-            },
             buttonTheme: {
                 style: {
                     color: 'var(--fallback-bc,oklch(var(--bc)))',
