@@ -61,7 +61,7 @@ const TabContainer = ({ items }) => {
 
     return (
         selectedYear !== '' && activeTab !== '' &&
-        <div role="tablist" className="tabs tabs-lifted tabs-lg mt-2">
+        <div role="tablist" className="tabs tabs-lifted md:tabs-lg mt-2">
             {
                 // eslint-disable-next-line react/prop-types
                 items.map((tab) => (
