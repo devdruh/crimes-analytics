@@ -1,6 +1,6 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import { API_MCI_ENDPOINT, API_MCI_NEIGHBOURHOOD, API_YTD_CRIME_WM, DEFAULT_LAYER_EXTENT, MONTHS_OF_THE_YEAR } from './constants';
-import { convertTo12Hour, formatCategoryQuery, formatDaysOrder, formatHour12, formatMonthToNumber } from './formatters';
+import { convertTo12Hour, formatCategoryQuery, formatDaysOrder, formatHour12, formatMonthToNumber, formatSingleQuotedString } from './formatters';
 import { viewGoToExtent, viewWhenLayerView } from './views';
 import { mapAddLayer, mapRemoveAllLayers, mapRemoveLayer } from './maps';
 
@@ -342,7 +342,8 @@ export const queryNeighbourhoodStats = async (where) => {
 
 export const queryDrillDownNeighbourhoodData = async (event) => {
 
-    const where = `OCC_YEAR = '${event.point.id.substring(event.point.id.length - 4)}' AND NEIGHBOURHOOD_158 = '${event.point.name}'`;
+    const neighbourhood = formatSingleQuotedString(event.point.name);
+    const where = `OCC_YEAR = '${event.point.id.substring(event.point.id.length - 4)}' AND NEIGHBOURHOOD_158 = '${neighbourhood}'`;
     const response = await queryNeighbourhoodPremises(where);
 
     return response;
@@ -370,14 +371,15 @@ export const queryByNeighbourhood = (params) => {
     let sqlQuery;
 
     if (!params.isUndefined) {
-        sqlQuery = `OCC_YEAR = '${params.year}' AND NEIGHBOURHOOD_158 = '${params.name}'`;
+        const neighbourhood = formatSingleQuotedString(params.name);
+        sqlQuery = `OCC_YEAR = '${params.year}' AND NEIGHBOURHOOD_158 = '${neighbourhood}'`;
         mapRemoveAllLayers();
         mapAddLayer(layerNeighbourhood);
         mapAddLayer(layerMajorCrimeIndicators);
-        layerNeighbourhood.definitionExpression = `AREA_NAME = '${params.name}'`;
+        layerNeighbourhood.definitionExpression = `AREA_NAME = '${neighbourhood}'`;
         layerNeighbourhood.featureEffect = {
             filter: {
-                where: `AREA_NAME = '${params.name}'`
+                where: `AREA_NAME = '${neighbourhood}'`
             },
             includedEffect: "bloom(0.9 0.6pt 0)",
             excludedEffect: "blur(2.25pt) opacity(0.5)"

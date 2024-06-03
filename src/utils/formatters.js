@@ -224,3 +224,17 @@ export const formatNeighbourhoodChartData = (data) => {
 
     return result;
 }
+
+export const formatSingleQuotedString = (string) => {
+
+    if (typeof string !== 'string') {
+        throw new TypeError('Input must be a string');
+    }
+
+    if (string.includes("'")) {
+        const escaptedString = string.replace(/'/g, "''");
+        return escaptedString;
+    }
+
+    return string;
+}
