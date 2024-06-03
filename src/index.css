@@ -114,6 +114,10 @@
     .map-container-slider {
         height: calc(100vh - 440px);
     }
+
+    .map-container-neighbourhood {
+        height: calc(100vh - 406px);
+    }
 }
 
 @media screen and (min-width: 769px) and (max-width: 1800px) {
@@ -123,6 +127,10 @@
 
     .map-container-slider {
         height: calc(100vh - 418px);
+    }
+
+    .map-container-neighbourhood {
+        height: calc(100vh - 458px);
     }
 }
 
