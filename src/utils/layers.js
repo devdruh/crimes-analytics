@@ -320,6 +320,26 @@ export const layerPopupTemplate = {
     lastEditInfoEnabled: true,
 };
 
+export const queryDivisionStats = async (where) => {
+
+    let sqlQuery = `OCC_YEAR = '${where.year}'`;
+    where.category !== '' ? sqlQuery += ` AND MCI_CATEGORY = '${where.category}'` : '';
+
+    const response = await layerStatsQuery(sqlQuery, ['DIVISION']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            label: element.attributes.DIVISION,
+            value: element.attributes.count
+        });
+    }
+
+    return data;
+
+}
+
 export const queryNeighbourhoodStats = async (where) => {
 
     let sqlQuery = `OCC_YEAR = '${where.year}'`;

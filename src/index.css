@@ -77,6 +77,10 @@
     height: calc(100vh - 458px);
 }
 
+.map-container-division {
+    height: calc(100vh - 458px);
+}
+
 .map-container-slider {
     height: calc(100vh - 249px);
 }
@@ -108,6 +112,10 @@
     .map-container-frequency {
         height: calc(100vh - 20vh);
     }
+
+    .map-container-division {
+        height: calc(100vh - 20vh);
+    }
 }
 
 @media screen and (min-width: 640px) and (max-width: 768px) {
@@ -124,6 +132,10 @@
     }
 
     .map-container-neighbourhood {
+        height: calc(100vh - 406px);
+    }
+
+    .map-container-division {
         height: calc(100vh - 406px);
     }
 }

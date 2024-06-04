@@ -1,6 +1,6 @@
 import MapContainer from "../../components/map/MapContainer"
 import LeftSidebar from "../../components/sidebar/LeftSidebar"
-// import DivisionContent from "../../components/tab/DivisionContent"
+import DivisionContent from "../../components/tab/DivisionContent"
 import NeighbourhoodContent from "../../components/tab/NeighbourhoodContent"
 import FrequencyContent from "../../components/tab/FrequencyContent"
 import AnalysisContent from "../../components/tab/AnalysisContent"
@@ -15,11 +15,11 @@ const Home = () => {
             title: 'Analysis',
             content: <AnalysisContent />,
         },
-        // {
-        //     id: 2,
-        //     title: 'Division',
-        //     content: <DivisionContent />,
-        // },
+        {
+            id: 2,
+            title: 'Division',
+            content: <DivisionContent />,
+        },
         {
             id: 3,
             title: 'Frequency',

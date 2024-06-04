@@ -38,6 +38,14 @@ const TabContainer = ({ items }) => {
             queryByTab(params);
         }
 
+        if (activeTab === 2 && selectedYear !== '') {
+            let params = {
+                year: selectedYear,
+                tab: 2,
+            };
+            queryByTab(params);
+        }
+
         if (activeTab === 3 && selectedYear !== '') {
             let params = {
                 year: selectedYear,
