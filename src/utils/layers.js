@@ -412,7 +412,15 @@ export const queryDrillDownDivisionData = async (event) => {
 
 export const querySumArrestedChargedPersons = async (params) => {
 
-    const where = `ARREST_YEAR = '${params.year}' AND DIVISION = '${params.name}'`
+    let where;
+
+    if (params.tab === 2) {
+        where = `ARREST_YEAR = '${params.year}' AND DIVISION = '${params.name}'`;
+    } else if (params.tab === 4) {
+        where = `ARREST_YEAR = '${params.year}' AND HOOD_158 = '${params.name}'`;
+    } else {
+        where = `ARREST_YEAR = '${params.year}'`;
+    }
 
     let query = layerArrestedChargedPersons.createQuery();
     query.where = where;
@@ -493,6 +501,22 @@ export const queryNeighbourhoodPremises = async (where) => {
 
 }
 
+
+export const queryNeighbourhoodId = async (params) => {
+
+    const neighbourhood = formatSingleQuotedString(params.name);
+    const where = `AREA_NAME LIKE '${neighbourhood}%'`;
+
+    let query = layerNeighbourhood.createQuery();
+    query.where = where;
+    query.returnGeometry = false;
+    query.outFields = '*';
+
+    const result = await layerNeighbourhood.queryFeatures(query);
+
+    return result;
+}
+
 export const queryByNeighbourhood = (params) => {
 
     let sqlQuery;
@@ -521,7 +545,8 @@ export const queryByNeighbourhood = (params) => {
         };
         layerNeighbourhood.renderer = boundaryRenderer;
         layerNeighbourhood.queryExtent().then(function (results) {
-            viewGoToExtent(results.extent);
+            if (results.extent !== null)
+                viewGoToExtent(results.extent);
         });
     } else {
         sqlQuery = `OCC_YEAR = '${params.year}'`;

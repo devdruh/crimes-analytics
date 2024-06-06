@@ -7,7 +7,7 @@ import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsDrilldown from 'highcharts/modules/drilldown';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import { formatDrilldownData, formatNeighbourhoodChartData } from '../../utils/formatters';
-import { queryByNeighbourhood, queryDrillDownNeighbourhoodData } from '../../utils/layers';
+import { queryByNeighbourhood, queryDrillDownNeighbourhoodData, queryNeighbourhoodId, querySumArrestedChargedPersons } from '../../utils/layers';
 import { viewClosePopup } from '../../utils/views';
 import { CHART_NOTE_CAPTION } from '../../utils/constants';
 
@@ -93,7 +93,7 @@ const chartOptions = {
             }
         },
         gridLineColor: 'var(--fallback-bc,oklch(var(--bc)/0.3))',
-        gridLineWidth: 0
+        // gridLineWidth: 0
     },
     loading: {
         labelStyle: {
@@ -275,6 +275,27 @@ const NeighbourhoodHighCharts = ({ items }) => {
                                 const drilldownSeriesData = await queryDrillDownNeighbourhoodData(event);
                                 const drillDownData = formatDrilldownData(drilldownSeriesData);
 
+                                const findNeighbourId = await queryNeighbourhoodId({ name: event.point.name });
+
+                                let neighbourId;
+                                let totalArrested = 0;
+
+                                if (findNeighbourId.features.length > 0) {
+                                    neighbourId = findNeighbourId.features[0].attributes.HOOD_ID;
+
+                                    const _params = {
+                                        tab: 4,
+                                        name: neighbourId,
+                                        year: event.point.drilldown.substring(event.point.drilldown.length - 4),
+                                    }
+
+                                    const getTotalArrested = await querySumArrestedChargedPersons(_params)
+
+                                    if (getTotalArrested.features.length > 0 && getTotalArrested.features[0].attributes.TOTAL_ARRESTED !== null) {
+                                        totalArrested = getTotalArrested.features[0].attributes.TOTAL_ARRESTED
+                                    }
+                                }
+
                                 // Prepare new drilldown series
                                 const series = {
                                     name: event.point.name,
@@ -289,8 +310,12 @@ const NeighbourhoodHighCharts = ({ items }) => {
                                 // Add new series as drilldown after a delay
                                 const timeId = setTimeout(() => {
                                     chart.setTitle({ text: 'Crimes occurred by Premises' });
-                                    chart.setCaption({ text: '' });
-                                    chart.setSize(null, 400, undefined);
+                                    chart.setCaption({
+                                        text: totalArrested !== 0 ? `👮🚔🚨 There are a total of <b>${Highcharts.numberFormat(event.point.y, 0, '', ',')}</b> crimes and <b>${Highcharts.numberFormat(totalArrested, 0, '', ',')}</b> persons arrested in ${event.point.name === 'NSA' ? 'a Not Specified Area' : 'this neighbourhood'}` : '',
+                                        verticalAlign: 'bottom',
+                                        align: 'center',
+                                    });
+                                    chart.setSize(undefined, 400, undefined);
                                     chart.addSeriesAsDrilldown(event.point, series);
                                 }, 1000);
 
