@@ -248,6 +248,7 @@ const DivisionHighCharts = ({ items }) => {
 
                             // update layer based on selected series
                             const params = {
+                                tab: 2,
                                 name: event.point.name,
                                 year: event.point.drilldown.substring(event.point.drilldown.length - 4),
                                 isUndefined: false,
