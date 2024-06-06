@@ -309,7 +309,7 @@ const DivisionHighCharts = ({ items }) => {
                     drillup: function () {
                         const chart = this;
                         chart.setTitle({ text: chartTitle });
-                        chart.setCaption({ text: CHART_NOTE_CAPTION, align: 'left' });
+                        chart.setCaption({ text: CHART_NOTE_CAPTION, align: 'left', verticalAlign: 'top' });
 
                         // close popup on change tab
                         viewClosePopup();
