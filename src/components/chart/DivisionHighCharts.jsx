@@ -7,7 +7,7 @@ import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsDrilldown from 'highcharts/modules/drilldown';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import { formatDivisionChartData, formatDrilldownData } from '../../utils/formatters';
-import { queryByDivision, queryDrillDownDivisionData } from '../../utils/layers';
+import { queryByDivision, queryDrillDownDivisionData, querySumArrestedChargedPersons } from '../../utils/layers';
 import { viewClosePopup } from '../../utils/views';
 import { CHART_NOTE_CAPTION } from '../../utils/constants';
 
@@ -264,6 +264,13 @@ const DivisionHighCharts = ({ items }) => {
                                 const drilldownSeriesData = await queryDrillDownDivisionData(event);
                                 const drillDownData = formatDrilldownData(drilldownSeriesData);
 
+                                // arrested drilldown
+                                const getTotalArrested = await querySumArrestedChargedPersons(params)
+                                let totalArrested = 0;
+                                if (getTotalArrested.features.length > 0 && getTotalArrested.features[0].attributes.TOTAL_ARRESTED !== null) {
+                                    totalArrested = getTotalArrested.features[0].attributes.TOTAL_ARRESTED
+                                }
+
                                 // Prepare new drilldown series
                                 const series = {
                                     name: event.point.name,
@@ -278,7 +285,11 @@ const DivisionHighCharts = ({ items }) => {
                                 // Add new series as drilldown after a delay
                                 const timeId = setTimeout(() => {
                                     chart.setTitle({ text: 'Crimes occurred by Neighbourhoods in Division' });
-                                    chart.setCaption({ text: '' });
+                                    chart.setCaption({
+                                        text: totalArrested !== 0 ? `👮🚔🚨 There are a total of <b>${Highcharts.numberFormat(event.point.y, 0, '', ',')}</b> crimes and <b>${Highcharts.numberFormat(totalArrested, 0, '', ',')}</b> persons arrested in ${event.point.name === 'NSA' ? 'a Not Specified Area' : 'this division'}` : '',
+                                        verticalAlign: 'bottom',
+                                        align: 'center',
+                                    });
                                     // chart.setSize(undefined, 400, undefined);
                                     chart.addSeriesAsDrilldown(event.point, series);
                                 }, 1000);
@@ -297,7 +308,7 @@ const DivisionHighCharts = ({ items }) => {
                     drillup: function () {
                         const chart = this;
                         chart.setTitle({ text: chartTitle });
-                        chart.setCaption({ text: CHART_NOTE_CAPTION });
+                        chart.setCaption({ text: CHART_NOTE_CAPTION, align: 'left' });
 
                         // close popup on change tab
                         viewClosePopup();

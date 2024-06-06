@@ -35,7 +35,7 @@ export const layerPoliceFacilities = new FeatureLayer({
     outFields: '*',
 });
 
-export const layerArrested = new FeatureLayer({
+export const layerArrestedChargedPersons = new FeatureLayer({
     id: 'patrol-zones',
     url: API_MCI_ARRESTED,
     outFields: '*',
@@ -408,6 +408,26 @@ export const queryDrillDownDivisionData = async (event) => {
     const response = await queryDivisionNeighbourhood(where);
 
     return response;
+}
+
+export const querySumArrestedChargedPersons = async (params) => {
+
+    const where = `ARREST_YEAR = '${params.year}' AND DIVISION = '${params.name}'`
+
+    let query = layerArrestedChargedPersons.createQuery();
+    query.where = where;
+    query.outFields = '*';
+
+    let sumArrested = {
+        onStatisticField: "ARREST_COUNT",
+        outStatisticFieldName: "TOTAL_ARRESTED",
+        statisticType: "sum"
+    };
+    query.outStatistics = [sumArrested];
+
+    let result = await layerArrestedChargedPersons.queryFeatures(query);
+
+    return result;
 }
 
 export const queryDivisionNeighbourhood = async (where) => {
