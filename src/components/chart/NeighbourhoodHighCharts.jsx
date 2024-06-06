@@ -333,7 +333,11 @@ const NeighbourhoodHighCharts = ({ items }) => {
                     drillup: function () {
                         const chart = this;
                         chart.setTitle({ text: chartTitle });
-                        chart.setCaption({ text: CHART_NOTE_CAPTION });
+                        chart.setCaption({
+                            text: CHART_NOTE_CAPTION,
+                            verticalAlign: 'top',
+                            align: 'left',
+                        });
                         chart.setSize(null, 2500, undefined);
 
                         // close popup on change tab
