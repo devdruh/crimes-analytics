@@ -1,5 +1,5 @@
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import { API_MCI_ENDPOINT, API_MCI_NEIGHBOURHOOD, API_YTD_CRIME_WM, DEFAULT_LAYER_EXTENT, MONTHS_OF_THE_YEAR } from './constants';
+import { API_MCI_ARRESTED, API_MCI_DIVISION, API_MCI_ENDPOINT, API_MCI_NEIGHBOURHOOD, API_MCI_POLICE_FACILITIES, API_YTD_CRIME_WM, DEFAULT_LAYER_EXTENT, MONTHS_OF_THE_YEAR } from './constants';
 import { convertTo12Hour, formatCategoryQuery, formatDaysOrder, formatHour12, formatMonthToNumber, formatSingleQuotedString } from './formatters';
 import { viewGoToExtent, viewWhenLayerView } from './views';
 import { mapAddLayer, mapRemoveAllLayers, mapRemoveLayer } from './maps';
@@ -21,6 +21,24 @@ export const layerNeighbourhood = new FeatureLayer({
     id: 'neighbourhood_158',
     url: API_MCI_NEIGHBOURHOOD,
     outFields: "*",
+});
+
+export const layerDivision = new FeatureLayer({
+    id: 'division-17',
+    url: API_MCI_DIVISION,
+    outFields: "*",
+});
+
+export const layerPoliceFacilities = new FeatureLayer({
+    id: 'police-facilities',
+    url: API_MCI_POLICE_FACILITIES,
+    outFields: '*',
+});
+
+export const layerArrested = new FeatureLayer({
+    id: 'patrol-zones',
+    url: API_MCI_ARRESTED,
+    outFields: '*',
 });
 
 export const layerStatsQuery = async (where, groupStats) => {
@@ -234,6 +252,7 @@ export const queryByTab = (params) => {
 
     layerMajorCrimeIndicators.definitionExpression = sqlQuery;
 
+    mapRemoveLayer(layerDivision);
     mapRemoveLayer(layerNeighbourhood);
     const layerCallback = () => {
         viewGoToExtent(DEFAULT_LAYER_EXTENT);
@@ -332,6 +351,74 @@ export const queryDivisionStats = async (where) => {
         const element = response.features[index];
         data.push({
             label: element.attributes.DIVISION,
+            value: element.attributes.count
+        });
+    }
+
+    return data;
+
+}
+
+export const queryByDivision = (params) => {
+
+    let sqlQuery;
+
+    if (!params.isUndefined) {
+        sqlQuery = `OCC_YEAR = '${params.year}' AND DIVISION = '${params.name}'`;
+        mapRemoveAllLayers();
+        mapAddLayer(layerDivision);
+        mapAddLayer(layerMajorCrimeIndicators);
+        layerDivision.definitionExpression = `DIV = '${params.name}'`;
+        layerDivision.featureEffect = {
+            filter: {
+                where: `DIV = '${params.name}'`
+            },
+            includedEffect: "bloom(0.9 0.6pt 0)",
+            excludedEffect: "blur(2.25pt) opacity(0.5)"
+        };
+        const boundaryRenderer = {
+            type: "simple",
+            symbol: {
+                color: "#0ca5b0",
+                type: "simple-line",
+                style: "solid"
+            },
+        };
+        layerDivision.renderer = boundaryRenderer;
+        layerDivision.queryExtent().then(function (results) {
+            if (results.extent !== null) {
+                viewGoToExtent(results.extent);
+            }
+        });
+    } else {
+        sqlQuery = `OCC_YEAR = '${params.year}'`;
+        viewGoToExtent(DEFAULT_LAYER_EXTENT);
+        mapRemoveLayer(layerDivision);
+        mapRemoveLayer(layerNeighbourhood);
+    }
+
+    layerMajorCrimeIndicators.definitionExpression = sqlQuery;
+
+}
+
+export const queryDrillDownDivisionData = async (event) => {
+
+    const division = formatSingleQuotedString(event.point.name);
+    const where = `OCC_YEAR = '${event.point.id.substring(event.point.id.length - 4)}' AND DIVISION = '${division}'`;
+    const response = await queryDivisionNeighbourhood(where);
+
+    return response;
+}
+
+export const queryDivisionNeighbourhood = async (where) => {
+
+    const response = await layerStatsQuery(where, ['NEIGHBOURHOOD_158']);
+    const data = [];
+
+    for (let index = 0; index < response.features.length; index++) {
+        const element = response.features[index];
+        data.push({
+            label: element.attributes.NEIGHBOURHOOD_158,
             value: element.attributes.count
         });
     }

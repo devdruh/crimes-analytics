@@ -31,7 +31,7 @@ const useLayerInit = () => {
         sqlQuery += formattedCategory;
     }
 
-    if (activeTab === 3 || activeTab === 4) {
+    if (activeTab === 2 || activeTab === 3 || activeTab === 4) {
         sqlQuery = `OCC_YEAR='${selectedYear}'`;
     }
 

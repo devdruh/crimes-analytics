@@ -16,14 +16,14 @@ const Home = () => {
             content: <AnalysisContent />,
         },
         {
-            id: 2,
-            title: 'Division',
-            content: <DivisionContent />,
-        },
-        {
             id: 3,
             title: 'Frequency',
             content: <FrequencyContent />,
+        },
+        {
+            id: 2,
+            title: 'Division',
+            content: <DivisionContent />,
         },
         {
             id: 4,

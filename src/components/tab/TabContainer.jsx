@@ -6,6 +6,7 @@ import { viewClosePopup } from '../../utils/views';
 import { queryByTab } from '../../utils/layers';
 import createLeftSideFilter from '../../zustand/createLeftSideFilter';
 import expandNeighbourhoodChart from '../widget/ExpandNeighbourhoodChart';
+import expandDivisionChart from '../widget/ExpandDivisionChart';
 
 // eslint-disable-next-line react/prop-types
 const TabContainer = ({ items }) => {
@@ -22,7 +23,9 @@ const TabContainer = ({ items }) => {
             setActiveTab(1);
         }
 
+        // set chart visibility per tab
         activeTab === 1 ? expandChart.visible = true : expandChart.visible = false;
+        activeTab === 2 ? expandDivisionChart.visible = true : expandDivisionChart.visible = false;
         activeTab === 3 ? expandFrequencyChart.visible = true : expandFrequencyChart.visible = false;
         activeTab === 4 ? expandNeighbourhoodChart.visible = true : expandNeighbourhoodChart.visible = false;
 

@@ -225,6 +225,42 @@ export const formatNeighbourhoodChartData = (data) => {
     return result;
 }
 
+export const formatDivisionChartData = (data) => {
+
+    const result = [];
+
+    for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        let formattedData = [];
+        if (element.data.length > 0) {
+            const items = element.data;
+
+            for (let index = 0; index < items.length; index++) {
+                const elementItems = items[index];
+                const key = elementItems.label + '-' + element.name;
+                formattedData.push({
+                    id: key,
+                    name: elementItems.label.toString(),
+                    y: elementItems.value,
+                    drilldown: elementItems.value === null ? null : key
+                });
+            }
+        }
+
+        result.push({
+            id: element.name,
+            name: element.name,
+            type: 'bar',
+            data: formattedData,
+            color: index === 0 ? '#0ca5b0' : '#ffc941',
+            visible: index === 0 ? true : false,
+        });
+
+    }
+
+    return result;
+}
+
 export const formatSingleQuotedString = (string) => {
 
     if (typeof string !== 'string') {

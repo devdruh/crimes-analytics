@@ -2,6 +2,9 @@ export const APP_NAME = 'Toronto Crimes Analytics';
 export const API_MCI_ENDPOINT = 'https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Major_Crime_Indicators_Open_Data/FeatureServer/0'
 export const API_MCI_CATEGORY = 'MCI_CATEGORY';
 export const API_MCI_NEIGHBOURHOOD = 'https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/NEIGHBOURHOOD_158/FeatureServer/1'
+export const API_MCI_DIVISION = 'https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/TPS_POLICE_DIVISIONS_REV/FeatureServer/0'
+export const API_MCI_POLICE_FACILITIES = 'https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Police_Facilities/FeatureServer/0'
+export const API_MCI_ARRESTED = 'https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Arrested_and_Charged_Persons_(ASR_ENF_TBL_001)/FeatureServer/0'
 
 //Social Media URL 
 export const TIKTOK_URL = 'https://www.tiktok.com';
