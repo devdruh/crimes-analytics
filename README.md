@@ -1,6 +1,6 @@
 # Toronto Crimes Analytics
 
-Welcome to the **Toronto Crimes Analytics** project! This application provides insightful visualizations and analysis of crime data in Toronto. Leveraging the data visualization techniques could help the community understand crime patterns and trends within the city.
+Welcome to the **Toronto Crimes Analytics** project! This application provides insightful visualizations and analysis of crime data in Toronto. Leveraging the data visualization techniques that could help the community understand crime patterns and trends within the city.
 
 ## Features
 
