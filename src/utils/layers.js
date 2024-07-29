@@ -523,14 +523,22 @@ export const queryByNeighbourhood = (params) => {
 
     if (!params.isUndefined) {
         const neighbourhood = formatSingleQuotedString(params.name);
+
+        // remove hood id
+        let subStringNeighbourhood = neighbourhood;
+        const findIndex = neighbourhood.indexOf("(");
+        if (findIndex !== -1) {
+            subStringNeighbourhood = neighbourhood.substring(0, findIndex - 1);
+        }
+
         sqlQuery = `OCC_YEAR = '${params.year}' AND NEIGHBOURHOOD_158 = '${neighbourhood}'`;
         mapRemoveAllLayers();
         mapAddLayer(layerNeighbourhood);
         mapAddLayer(layerMajorCrimeIndicators);
-        layerNeighbourhood.definitionExpression = `AREA_NAME = '${neighbourhood}'`;
+        layerNeighbourhood.definitionExpression = `AREA_NAME = '${subStringNeighbourhood}'`;
         layerNeighbourhood.featureEffect = {
             filter: {
-                where: `AREA_NAME = '${neighbourhood}'`
+                where: `AREA_NAME = '${subStringNeighbourhood}'`
             },
             includedEffect: "bloom(0.9 0.6pt 0)",
             excludedEffect: "blur(2.25pt) opacity(0.5)"
